@@ -63,23 +63,55 @@ const elements = {
     modalCounter: document.getElementById('modalCounter'), modalDownloadBtn: document.getElementById('modalDownloadBtn'),
     modalCopyBtn: document.getElementById('modalCopyBtn'), modalDlText: document.getElementById('modalDlText'),
     contextMenu: document.getElementById('customContextMenu'), menuOpen: document.getElementById('menuOpen'),
-    menuCopy: document.getElementById('menuCopy'), menuDownload: document.getElementById('menuDownload')
+    menuCopy: document.getElementById('menuCopy'), menuDownload: document.getElementById('menuDownload'),
+    downloadBtn: document.getElementById('downloadBtn') // Ana profil indirme butonu
 };
 
-// --- YENİ: MANYETİK BUTON MOTORU ---
+// --- YENİ: ZORUNLU İNDİRME (FORCE DOWNLOAD) VE APPLE ÇÖZÜMÜ ---
+async function forceDownload(url, isVideo) {
+    showToast('İndirme hazırlanıyor...', 'info');
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('CORS Hatası');
+        const blob = await response.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = blobUrl;
+        const ext = isVideo ? 'mp4' : 'jpg';
+        a.download = `ig_download_${new Date().getTime()}.${ext}`;
+        
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(blobUrl);
+        document.body.removeChild(a);
+        
+        showToast('İndirme başarılı!', 'success');
+    } catch (error) {
+        // IG Sunucuları arka planı engellerse (Apple/Safari) burası çalışır
+        window.open(url, '_blank');
+        if (isVideo) {
+            setTimeout(() => {
+                showToast('Apple Cihazlar: Yeni açılan videonun altındaki "Paylaş" ikonuna basıp "Dosyalara Kaydet" diyebilirsiniz.', 'info', true);
+            }, 1000);
+        }
+    }
+}
+
+// MANYETİK BUTON MOTORU
 elements.searchBtn.addEventListener('mousemove', (e) => {
     const rect = elements.searchBtn.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
     elements.searchBtn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-    elements.searchBtn.style.transition = 'none'; // Hareket ederken geçişi kapat ki pürüzsüz olsun
+    elements.searchBtn.style.transition = 'none';
 });
 elements.searchBtn.addEventListener('mouseleave', () => {
     elements.searchBtn.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
-    elements.searchBtn.style.transform = 'translate(0px, 0px)'; // Yay gibi geri dön
+    elements.searchBtn.style.transform = 'translate(0px, 0px)';
 });
 
-// --- YENİ: KART FENERİ (SPOTLIGHT) DİNLEYİCİSİ ---
 function attachSpotlightEffect(div) {
     div.addEventListener('mousemove', (e) => {
         const rect = div.getBoundingClientRect();
@@ -114,10 +146,7 @@ document.addEventListener('click', () => { elements.contextMenu.style.display = 
 window.addEventListener('scroll', () => { elements.contextMenu.style.display = 'none'; });
 
 elements.menuOpen.onclick = () => { window.open(contextMediaUrl, '_blank'); };
-elements.menuDownload.onclick = () => { 
-    let a = document.createElement('a'); a.href = contextMediaUrl; a.target = '_blank'; 
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-};
+elements.menuDownload.onclick = () => { forceDownload(contextMediaUrl, contextMediaUrl.includes('.mp4')); };
 elements.menuCopy.onclick = () => { navigator.clipboard.writeText(contextMediaUrl); showToast('toastCopied', 'success', false); };
 
 elements.modalCopyBtn.onclick = () => {
@@ -182,7 +211,7 @@ function showToast(msgKey, type = 'error', directMsg = false) {
     elements.toastContainer.appendChild(toast); setTimeout(() => { if(toast.parentElement) toast.remove(); }, 3000);
 }
 function showSkeleton() {
-    elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none'; elements.galleryContainer.innerHTML = ''; elements.galleryContainer.style.display = 'grid';
+    elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none'; elements.downloadBtn.style.display = 'none'; elements.galleryContainer.innerHTML = ''; elements.galleryContainer.style.display = 'grid';
     if (currentMode === 'profile' || currentMode === 'video') { elements.galleryContainer.style.display = 'flex'; elements.galleryContainer.innerHTML = `<div class="skeleton-box skeleton-profile"></div>`; } 
     else { for(let i=0; i<6; i++) { elements.galleryContainer.innerHTML += `<div class="gallery-item"><div class="skeleton-box skeleton-gallery"></div></div>`; } }
 }
@@ -191,7 +220,7 @@ function switchTab(mode, iconClass, btnId) {
     currentMode = mode; elements.tabs.forEach(btn => btn.classList.remove('active')); document.getElementById(btnId).classList.add('active');
     elements.inputIcon.innerHTML = `<i class="fa-solid ${iconClass}"></i>`;
     elements.galleryContainer.style.display = 'none'; elements.galleryContainer.innerHTML = '';
-    elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none';
+    elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none'; elements.downloadBtn.style.display = 'none';
     elements.mainInput.value = ''; updateModeText(); loadHistory(); 
 }
 
@@ -234,6 +263,11 @@ elements.searchBtn.addEventListener('click', async function() {
                 elements.profileImage.src = proxyUrl; elements.profileImage.style.display = 'block';
                 attachCinematicLoad(elements.profileImage);
                 showToast(translations[currentLang].btnGet + " başarılı!", 'success', true); saveHistory(inputValue, proxyUrl); 
+                
+                // İNDİR BUTONU ZORUNLU İNDİRME UYARLAMASI
+                elements.downloadBtn.style.display = 'flex';
+                elements.downloadBtn.onclick = (e) => { e.preventDefault(); forceDownload(proxyUrl, false); };
+
                 elements.profileImage.style.cursor = 'pointer'; elements.profileImage.onclick = () => openModal([{url: hdImageUrl, isVideo: false}]);
                 elements.profileImage.oncontextmenu = (e) => showContextMenu(e, proxyUrl);
             } else { showToast("errNotFound"); }
@@ -261,11 +295,11 @@ elements.searchBtn.addEventListener('click', async function() {
                 let finalCoverUrl = rawCoverUrl ? `https://wsrv.nl/?url=${encodeURIComponent(forceHdUrl(rawCoverUrl))}` : 'https://via.placeholder.com/250x250/0e0e0e/007acc?text=Album';
 
                 const div = document.createElement('div'); div.className = 'gallery-item'; div.style.cursor = 'pointer'; 
-                div.style.animationDelay = `${index * 0.05}s`; // ŞELALE GECİKMESİ
+                div.style.animationDelay = `${index * 0.05}s`;
                 div.innerHTML = `<img src="${finalCoverUrl}" class="cinematic-media" style="height:250px; object-fit:cover;"> <div style="padding: 15px; text-align: center; background: rgba(0, 122, 204, 0.8); color: #fff; font-weight: bold; display:flex; align-items:center; justify-content:center; gap:8px;"><i class="fa-solid fa-folder-open"></i> ${title}</div>`;
                 div.onclick = () => loadHighlightStories(albumId);
                 const img = div.querySelector('img'); if(img) attachCinematicLoad(img);
-                attachSpotlightEffect(div); // FENER EFEKTİ
+                attachSpotlightEffect(div);
                 elements.galleryContainer.appendChild(div);
             });
             return;
@@ -291,8 +325,9 @@ elements.searchBtn.addEventListener('click', async function() {
                 let badgeHtml = ''; if (cleanMediaList.length > 1) { badgeHtml = `<div class="carousel-badge"><i class="fa-solid fa-clone"></i></div>`; } else if (coverMedia.isVideo) { badgeHtml = `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>`; }
 
                 const div = document.createElement('div'); div.className = 'gallery-item';
-                div.style.animationDelay = `${index * 0.05}s`; // ŞELALE GECİKMESİ
+                div.style.animationDelay = `${index * 0.05}s`; 
                 
+                // İNDİR BUTONU ZORUNLU İNDİRME UYARLAMASI
                 div.innerHTML = `
                     ${badgeHtml}
                     ${mediaHtml}
@@ -300,7 +335,7 @@ elements.searchBtn.addEventListener('click', async function() {
                         <div style="display:flex; gap:15px; margin-bottom:8px; font-weight:bold;"><span>${likes}</span> <span>${comments}</span></div>
                         <p style="color:#8a8a8a; font-size:12px;">${captionText}</p>
                     </div>
-                    <a href="${coverMedia.url}" target="_blank" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
+                    <a href="javascript:void(0)" onclick="forceDownload('${coverMedia.url}', ${coverMedia.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
                 
                 const mediaEl = div.querySelector('img, video');
                 if(mediaEl) { 
@@ -308,7 +343,7 @@ elements.searchBtn.addEventListener('click', async function() {
                     mediaEl.addEventListener('click', () => openModal(cleanMediaList));
                     mediaEl.oncontextmenu = (e) => showContextMenu(e, coverMedia.url); 
                 }
-                attachSpotlightEffect(div); // FENER EFEKTİ
+                attachSpotlightEffect(div); 
                 elements.galleryContainer.appendChild(div);
             });
             return;
@@ -318,13 +353,14 @@ elements.searchBtn.addEventListener('click', async function() {
             items.forEach((item, index) => {
                 const media = getMediaUrl(item); if(!media.url) return;
                 const div = document.createElement('div'); div.className = 'gallery-item';
-                div.style.animationDelay = `${index * 0.05}s`; // ŞELALE GECİKMESİ
+                div.style.animationDelay = `${index * 0.05}s`; 
                 
                 let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
+                // İNDİR BUTONU ZORUNLU İNDİRME UYARLAMASI
                 div.innerHTML = `
                     ${badgeHtml}
                     ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
-                    <a href="${media.url}" target="_blank" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
+                    <a href="javascript:void(0)" onclick="forceDownload('${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
                 
                 const mediaEl = div.querySelector('img, video');
                 if(mediaEl) {
@@ -332,7 +368,7 @@ elements.searchBtn.addEventListener('click', async function() {
                     mediaEl.addEventListener('click', () => openModal([media])); 
                     mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url);
                 }
-                attachSpotlightEffect(div); // FENER EFEKTİ
+                attachSpotlightEffect(div); 
                 elements.galleryContainer.appendChild(div);
             });
         } 
@@ -340,6 +376,10 @@ elements.searchBtn.addEventListener('click', async function() {
             elements.galleryContainer.style.display = 'none'; const media = getMediaUrl(items[0]); if (!media.url) { showToast("errVideo"); return; }
             if (media.isVideo) { elements.resultVideo.src = media.url; elements.resultVideo.style.display = 'block'; attachCinematicLoad(elements.resultVideo); elements.resultVideo.oncontextmenu = (e) => showContextMenu(e, media.url); } 
             else { elements.profileImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.profileImage.style.display = 'block'; attachCinematicLoad(elements.profileImage); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
+            
+            // ANA VİDEO İNDİR BUTONU
+            elements.downloadBtn.style.display = 'flex';
+            elements.downloadBtn.onclick = (e) => { e.preventDefault(); forceDownload(media.url, media.isVideo); };
         }
 
     } catch (error) { clearTimeout(timeoutId); hideSkeleton(); showToast("errSystem"); }
@@ -360,13 +400,14 @@ async function loadHighlightStories(highlightId) {
         items.forEach((item, index) => {
             const media = getMediaUrl(item); if(!media.url) return;
             const div = document.createElement('div'); div.className = 'gallery-item';
-            div.style.animationDelay = `${index * 0.05}s`; // ŞELALE GECİKMESİ
+            div.style.animationDelay = `${index * 0.05}s`; 
             
             let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
+            // İNDİR BUTONU ZORUNLU İNDİRME UYARLAMASI
             div.innerHTML = `
                 ${badgeHtml}
                 ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
-                <a href="${media.url}" target="_blank" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
+                <a href="javascript:void(0)" onclick="forceDownload('${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
                 
             const mediaEl = div.querySelector('img, video');
             if(mediaEl) {
@@ -374,7 +415,7 @@ async function loadHighlightStories(highlightId) {
                 mediaEl.addEventListener('click', () => openModal([media]));
                 mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url);
             }
-            attachSpotlightEffect(div); // FENER EFEKTİ
+            attachSpotlightEffect(div); 
             elements.galleryContainer.appendChild(div);
         });
     } catch (error) { clearTimeout(timeoutId); hideSkeleton(); showToast("errSystem"); }
@@ -395,7 +436,9 @@ function updateModalContent() {
     if (media.isVideo) { elements.modalVideo.src = media.url; elements.modalVideo.style.display = 'block'; elements.modalVideo.load(); elements.modalVideo.oncontextmenu = (e) => showContextMenu(e, media.url); } 
     else { elements.modalImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.modalImage.style.display = 'block'; elements.modalImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
     
-    elements.modalDownloadBtn.href = media.url;
+    // MODAL İNDİR BUTONU ZORUNLU İNDİRME UYARLAMASI
+    elements.modalDownloadBtn.onclick = (e) => { e.preventDefault(); forceDownload(media.url, media.isVideo); };
+
     if (currentMediaArray.length > 1) {
         elements.modalPrev.style.display = currentMediaIndex > 0 ? 'flex' : 'none'; elements.modalNext.style.display = currentMediaIndex < currentMediaArray.length - 1 ? 'flex' : 'none';
         elements.modalCounter.style.display = 'block'; elements.modalCounter.textContent = `${currentMediaIndex + 1} / ${currentMediaArray.length}`;
