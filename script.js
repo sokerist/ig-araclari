@@ -67,46 +67,39 @@ const elements = {
     downloadBtn: document.getElementById('downloadBtn')
 };
 
-// --- YENİ: WHATSAPP DETEKTÖRÜ VE APPLE EĞİTİM HAMLESİ ---
-async function forceDownload(event, url, isVideo) {
-    // 1. Cihaz analizleri
-    const inAppBrowser = /FBAN|FBAV|Instagram|WhatsApp|Line|Snapchat/i.test(navigator.userAgent);
-    const isIOS = /Mac|iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+// --- GLOBAL APPLE/WHATSAPP ENGELLEYİCİSİ (KESİN ÇÖZÜM) ---
+window.forceDownload = async function(event, btn, url, isVideo) {
+    if(event) event.preventDefault(); // Safari'nin linki açmasını ŞAK diye durdurur!
 
-    // 2. WhatsApp/Instagram içi tarayıcı kontrolü (İndirmeyi kesinkes engellerler)
+    const inAppBrowser = /FBAN|FBAV|Instagram|WhatsApp|Line|Snapchat/i.test(navigator.userAgent);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
     if (inAppBrowser) {
-        event.preventDefault();
-        showToast('⚠️ WhatsApp/Instagram tarayıcısındasınız. İndirmek için sağ alt/üst köşeden "Safari/Chrome\'da Aç" deyin.', 'error', true);
-        return;
+        showToast('⚠️ WhatsApp tarayıcısındasınız. Videoyu kaydetmek için sağ alt köşeden "Safari\'de Aç" deyin.', 'error');
+        return false;
     }
 
-    // 3. Apple iOS Kontrolü - Kullanıcıya uzun basmayı öğretiyoruz (En stabil yöntem)
     if (isIOS && isVideo) {
-        event.preventDefault();
-        const btn = event.currentTarget || event.target;
-        if(btn && btn.style) {
+        if (btn) {
             const originalText = btn.innerHTML;
-            // Butonu turuncu yap ve uyarı ver
-            btn.innerHTML = `<i class="fa-solid fa-hand-pointer"></i> UZUN BAS VE İNDİR`;
+            btn.innerHTML = `<i class="fa-solid fa-hand-pointer"></i> UZUN BAS`;
             btn.style.backgroundColor = "#f59e0b"; 
-            showToast('Apple Güvenliği: Butona UZUN BASILI TUTUN ve açılan menüden "Bağlantılı Dosyayı İndir" (Download Linked File) seçeneğine tıklayın.', 'info', true);
             
-            // 5 Saniye sonra butonu eski haline getir
+            showToast('Apple Güvenliği: Butona UZUN BASILI TUTUN ve "Bağlantılı Dosyayı İndir" seçeneğine tıklayın.', 'info');
+            
             setTimeout(() => {
                 btn.innerHTML = originalText;
                 btn.style.backgroundColor = "";
             }, 6000);
         }
-        return;
+        return false; // Safarinin videoya atlamasını %100 engeller.
     }
 
-    // 4. Android ve PC için Normal Zorunlu İndirme (Blob)
-    event.preventDefault();
     showToast('İndirme hazırlanıyor, lütfen bekleyin...', 'info');
     try {
         const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
         const response = await fetch(proxyUrl);
-        if (!response.ok) throw new Error('CORS Hatası');
+        if (!response.ok) throw new Error('CORS');
         
         const blob = await response.blob();
         const blobUrl = window.URL.createObjectURL(blob);
@@ -122,10 +115,10 @@ async function forceDownload(event, url, isVideo) {
         document.body.removeChild(a);
         showToast('İndirme başarılı!', 'success');
     } catch (error) {
-        // Son çare (Çok büyük dosyalarda tünel tıkanırsa)
         window.open(url, '_blank');
     }
-}
+    return false;
+};
 
 elements.searchBtn.addEventListener('mousemove', (e) => {
     const rect = elements.searchBtn.getBoundingClientRect();
@@ -155,9 +148,7 @@ function showContextMenu(e, url) {
 document.addEventListener('click', () => { elements.contextMenu.style.display = 'none'; });
 window.addEventListener('scroll', () => { elements.contextMenu.style.display = 'none'; });
 elements.menuOpen.onclick = () => { window.open(contextMediaUrl, '_blank'); };
-
-// MENÜDEN İNDİRMEK İÇİN GÜNCELLENDİ
-elements.menuDownload.onclick = (e) => { forceDownload(e, contextMediaUrl, contextMediaUrl.includes('.mp4')); };
+elements.menuDownload.onclick = (e) => { return forceDownload(e, elements.menuDownload, contextMediaUrl, contextMediaUrl.includes('.mp4')); };
 elements.menuCopy.onclick = () => { navigator.clipboard.writeText(contextMediaUrl); showToast('toastCopied', 'success', false); };
 
 elements.modalCopyBtn.onclick = () => {
@@ -208,7 +199,7 @@ function updateModeText() {
 function showToast(msgKey, type = 'error', directMsg = false) {
     const msg = directMsg ? msgKey : (translations[currentLang][msgKey] || msgKey);
     const toast = document.createElement('div'); toast.className = `toast ${type}`; let icon = type === 'error' ? 'fa-circle-exclamation' : (type === 'success' ? 'fa-check-circle' : 'fa-info-circle');
-    toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${msg}</span>`; elements.toastContainer.appendChild(toast); setTimeout(() => { if(toast.parentElement) toast.remove(); }, 3000);
+    toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${msg}</span>`; elements.toastContainer.appendChild(toast); setTimeout(() => { if(toast.parentElement) toast.remove(); }, 4700);
 }
 function showSkeleton() {
     elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none'; elements.downloadBtn.style.display = 'none'; elements.galleryContainer.innerHTML = ''; elements.galleryContainer.style.display = 'grid';
@@ -256,9 +247,8 @@ elements.searchBtn.addEventListener('click', async function() {
                 const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(hdImageUrl)}`; elements.profileImage.src = proxyUrl; elements.profileImage.style.display = 'block'; attachCinematicLoad(elements.profileImage);
                 showToast(translations[currentLang].btnGet + " başarılı!", 'success', true); saveHistory(inputValue, proxyUrl); 
                 
-                elements.downloadBtn.style.display = 'flex'; 
-                elements.downloadBtn.href = proxyUrl; // Uzun basılabilmesi için href eklendi
-                elements.downloadBtn.onclick = (e) => { forceDownload(e, proxyUrl, false); };
+                elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.href = proxyUrl; 
+                elements.downloadBtn.onclick = (e) => { return forceDownload(e, elements.downloadBtn, proxyUrl, false); };
                 
                 elements.profileImage.style.cursor = 'pointer'; elements.profileImage.onclick = () => openModal([{url: hdImageUrl, isVideo: false}]); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, proxyUrl);
             } else { showToast("errNotFound"); }
@@ -293,13 +283,15 @@ elements.searchBtn.addEventListener('click', async function() {
                 let badgeHtml = ''; if (cleanMediaList.length > 1) { badgeHtml = `<div class="carousel-badge"><i class="fa-solid fa-clone"></i></div>`; } else if (coverMedia.isVideo) { badgeHtml = `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>`; }
 
                 const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
+                
+                // RETURN KULLANILARAK BUTON KESİN OLARAK KİLİTLENDİ
                 div.innerHTML = `
                     ${badgeHtml} ${mediaHtml}
                     <div style="padding: 12px; font-size: 14px; background: #0e0e0e; color: #ddd; text-align:left; pointer-events:none;">
                         <div style="display:flex; gap:15px; margin-bottom:8px; font-weight:bold;"><span>${likes}</span> <span>${comments}</span></div>
                         <p style="color:#8a8a8a; font-size:12px;">${captionText}</p>
                     </div>
-                    <a href="${coverMedia.url}" onclick="forceDownload(event, '${coverMedia.url}', ${coverMedia.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
+                    <a href="${coverMedia.url}" onclick="return window.forceDownload(event, this, '${coverMedia.url}', ${coverMedia.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
                 
                 const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal(cleanMediaList)); mediaEl.oncontextmenu = (e) => showContextMenu(e, coverMedia.url); }
                 attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
@@ -310,9 +302,11 @@ elements.searchBtn.addEventListener('click', async function() {
             items.forEach((item, index) => {
                 const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
                 let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
+                
+                // RETURN KULLANILARAK BUTON KESİN OLARAK KİLİTLENDİ
                 div.innerHTML = `
                     ${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
-                    <a href="${media.url}" onclick="forceDownload(event, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
+                    <a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
                 const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
                 attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
             });
@@ -321,9 +315,8 @@ elements.searchBtn.addEventListener('click', async function() {
             if (media.isVideo) { elements.resultVideo.src = media.url; elements.resultVideo.style.display = 'block'; attachCinematicLoad(elements.resultVideo); elements.resultVideo.oncontextmenu = (e) => showContextMenu(e, media.url); } 
             else { elements.profileImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.profileImage.style.display = 'block'; attachCinematicLoad(elements.profileImage); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
             
-            elements.downloadBtn.style.display = 'flex'; 
-            elements.downloadBtn.href = media.url;
-            elements.downloadBtn.onclick = (e) => { forceDownload(e, media.url, media.isVideo); };
+            elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.href = media.url;
+            elements.downloadBtn.onclick = (e) => { return forceDownload(e, elements.downloadBtn, media.url, media.isVideo); };
         }
     } catch (error) { clearTimeout(timeoutId); hideSkeleton(); showToast("errSystem"); }
 });
@@ -340,9 +333,11 @@ async function loadHighlightStories(highlightId) {
         items.forEach((item, index) => {
             const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
             let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
+            
+            // RETURN KULLANILARAK BUTON KESİN OLARAK KİLİTLENDİ
             div.innerHTML = `
                 ${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
-                <a href="${media.url}" onclick="forceDownload(event, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
+                <a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
             const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
             attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
         });
@@ -361,9 +356,8 @@ function updateModalContent() {
     if (media.isVideo) { elements.modalVideo.src = media.url; elements.modalVideo.style.display = 'block'; elements.modalVideo.load(); elements.modalVideo.oncontextmenu = (e) => showContextMenu(e, media.url); } 
     else { elements.modalImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.modalImage.style.display = 'block'; elements.modalImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
     
-    // MODAL İÇİ İNDİR BUTONU
     elements.modalDownloadBtn.href = media.url;
-    elements.modalDownloadBtn.onclick = (e) => { forceDownload(e, media.url, media.isVideo); };
+    elements.modalDownloadBtn.onclick = (e) => { return forceDownload(e, elements.modalDownloadBtn, media.url, media.isVideo); };
     
     if (currentMediaArray.length > 1) { elements.modalPrev.style.display = currentMediaIndex > 0 ? 'flex' : 'none'; elements.modalNext.style.display = currentMediaIndex < currentMediaArray.length - 1 ? 'flex' : 'none'; elements.modalCounter.style.display = 'block'; elements.modalCounter.textContent = `${currentMediaIndex + 1} / ${currentMediaArray.length}`; } else { elements.modalPrev.style.display = 'none'; elements.modalNext.style.display = 'none'; elements.modalCounter.style.display = 'none'; }
 }
