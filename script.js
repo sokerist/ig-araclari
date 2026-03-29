@@ -67,51 +67,23 @@ const elements = {
     downloadBtn: document.getElementById('downloadBtn')
 };
 
-// --- YENİ: APPLE (iOS) İÇİN HAYALET SAYFA VE ZORUNLU İNDİRİCİ ---
+// --- YENİ: POP-UP ENGELLEYİCİYİ AŞAN APPLE ÇÖZÜMÜ ---
 async function forceDownload(url, isVideo) {
-    // 1. Cihazın Apple (iOS/Mac) olup olmadığını anla
     const isIOS = /Mac|iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-    // 2. Eğer Apple ise ve Video indiriyorsa, Hayalet Sayfa (Phantom Page) taktiğini devreye sok!
     if (isIOS && isVideo) {
-        // Pop-up engelleyiciye takılmamak için yeni sekmeyi anında senkron açıyoruz
-        const win = window.open('', '_blank');
-        if (win) {
-            // Saf video yerine, Safariyi kandıracak şık bir HTML sayfası basıyoruz
-            win.document.write(`
-                <!DOCTYPE html>
-                <html lang="tr">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-                    <title>Videoyu İndir</title>
-                    <style>
-                        body { margin: 0; background: #0a0a0a; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; padding: 20px; box-sizing: border-box; }
-                        video { max-width: 100%; max-height: 65vh; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); background: #000; border: 1px solid rgba(255,255,255,0.1); }
-                        .info-box { background: rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 16px; margin-top: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px); width: 100%; max-width: 400px; animation: slideUp 0.5s ease; }
-                        .info-title { margin: 0 0 10px 0; font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; }
-                        .info-desc { margin: 0; font-size: 14px; color: #a1a1aa; line-height: 1.5; font-weight: 400; }
-                        .apple-badge { background: #10b981; color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-                        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-                    </style>
-                </head>
-                <body>
-                    <video src="${url}" controls playsinline autoplay loop></video>
-                    <div class="info-box">
-                        <p class="info-title"><span class="apple-badge">Apple iOS</span> İndirme Yöntemi</p>
-                        <p class="info-desc">Yukarıdaki videonun üzerine <b>uzun basılı tutun</b> ve açılan menüden <b style="color: #fff;">"Videoyu Kaydet"</b> veya <b style="color: #fff;">"Bağlantılı Dosyayı İndir"</b> seçeneğine tıklayın.</p>
-                    </div>
-                </body>
-                </html>
-            `);
-            win.document.close();
-        } else {
-            showToast('Lütfen tarayıcınızın Pop-up engelleyicisini kapatın!', 'error');
-        }
-        return; // Apple işlemini burada sonlandır.
+        showToast('Apple Cihaz: Lütfen açılan videoda alttaki Paylaş ikonuna basıp "Dosyalara Kaydet" deyin.', 'info');
+        
+        // Safari pop-up kuralını aşmak için gizli bir 'a' etiketiyle anında tıklatıyoruz!
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank'; // Yeni sekmede aç
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return;
     }
 
-    // 3. Apple değilse (veya resimse), normal Android/PC Zorunlu İndirme (Blob) Tünelini Kullan
     showToast('İndirme hazırlanıyor, lütfen bekleyin...', 'info');
     try {
         const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
@@ -132,12 +104,10 @@ async function forceDownload(url, isVideo) {
         document.body.removeChild(a);
         showToast('İndirme başarılı!', 'success');
     } catch (error) {
-        // Eğer Android/PC'de bile tünel tıkanırsa (çok büyük video), son çare olarak normal aç
         window.open(url, '_blank');
     }
 }
 
-// MANYETİK BUTON MOTORU
 elements.searchBtn.addEventListener('mousemove', (e) => {
     const rect = elements.searchBtn.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2; const y = e.clientY - rect.top - rect.height / 2;
