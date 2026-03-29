@@ -67,23 +67,41 @@ const elements = {
     downloadBtn: document.getElementById('downloadBtn')
 };
 
-// --- YENİ: POP-UP ENGELLEYİCİYİ AŞAN APPLE ÇÖZÜMÜ ---
-async function forceDownload(url, isVideo) {
+// --- YENİ: WHATSAPP DETEKTÖRÜ VE APPLE EĞİTİM HAMLESİ ---
+async function forceDownload(event, url, isVideo) {
+    // 1. Cihaz analizleri
+    const inAppBrowser = /FBAN|FBAV|Instagram|WhatsApp|Line|Snapchat/i.test(navigator.userAgent);
     const isIOS = /Mac|iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-    if (isIOS && isVideo) {
-        showToast('Apple Cihaz: Lütfen açılan videoda alttaki Paylaş ikonuna basıp "Dosyalara Kaydet" deyin.', 'info');
-        
-        // Safari pop-up kuralını aşmak için gizli bir 'a' etiketiyle anında tıklatıyoruz!
-        const a = document.createElement('a');
-        a.href = url;
-        a.target = '_blank'; // Yeni sekmede aç
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+    // 2. WhatsApp/Instagram içi tarayıcı kontrolü (İndirmeyi kesinkes engellerler)
+    if (inAppBrowser) {
+        event.preventDefault();
+        showToast('⚠️ WhatsApp/Instagram tarayıcısındasınız. İndirmek için sağ alt/üst köşeden "Safari/Chrome\'da Aç" deyin.', 'error', true);
         return;
     }
 
+    // 3. Apple iOS Kontrolü - Kullanıcıya uzun basmayı öğretiyoruz (En stabil yöntem)
+    if (isIOS && isVideo) {
+        event.preventDefault();
+        const btn = event.currentTarget || event.target;
+        if(btn && btn.style) {
+            const originalText = btn.innerHTML;
+            // Butonu turuncu yap ve uyarı ver
+            btn.innerHTML = `<i class="fa-solid fa-hand-pointer"></i> UZUN BAS VE İNDİR`;
+            btn.style.backgroundColor = "#f59e0b"; 
+            showToast('Apple Güvenliği: Butona UZUN BASILI TUTUN ve açılan menüden "Bağlantılı Dosyayı İndir" (Download Linked File) seçeneğine tıklayın.', 'info', true);
+            
+            // 5 Saniye sonra butonu eski haline getir
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.backgroundColor = "";
+            }, 6000);
+        }
+        return;
+    }
+
+    // 4. Android ve PC için Normal Zorunlu İndirme (Blob)
+    event.preventDefault();
     showToast('İndirme hazırlanıyor, lütfen bekleyin...', 'info');
     try {
         const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
@@ -104,6 +122,7 @@ async function forceDownload(url, isVideo) {
         document.body.removeChild(a);
         showToast('İndirme başarılı!', 'success');
     } catch (error) {
+        // Son çare (Çok büyük dosyalarda tünel tıkanırsa)
         window.open(url, '_blank');
     }
 }
@@ -136,8 +155,11 @@ function showContextMenu(e, url) {
 document.addEventListener('click', () => { elements.contextMenu.style.display = 'none'; });
 window.addEventListener('scroll', () => { elements.contextMenu.style.display = 'none'; });
 elements.menuOpen.onclick = () => { window.open(contextMediaUrl, '_blank'); };
-elements.menuDownload.onclick = () => { forceDownload(contextMediaUrl, contextMediaUrl.includes('.mp4')); };
+
+// MENÜDEN İNDİRMEK İÇİN GÜNCELLENDİ
+elements.menuDownload.onclick = (e) => { forceDownload(e, contextMediaUrl, contextMediaUrl.includes('.mp4')); };
 elements.menuCopy.onclick = () => { navigator.clipboard.writeText(contextMediaUrl); showToast('toastCopied', 'success', false); };
+
 elements.modalCopyBtn.onclick = () => {
     let url = currentMediaArray[currentMediaIndex].url; navigator.clipboard.writeText(url);
     let icon = elements.modalCopyBtn.querySelector('i'); icon.className = 'fa-solid fa-check'; icon.style.color = '#10b981'; showToast('toastCopied', 'success', false);
@@ -233,7 +255,11 @@ elements.searchBtn.addEventListener('click', async function() {
             if (hdImageUrl) {
                 const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(hdImageUrl)}`; elements.profileImage.src = proxyUrl; elements.profileImage.style.display = 'block'; attachCinematicLoad(elements.profileImage);
                 showToast(translations[currentLang].btnGet + " başarılı!", 'success', true); saveHistory(inputValue, proxyUrl); 
-                elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.onclick = (e) => { e.preventDefault(); forceDownload(proxyUrl, false); };
+                
+                elements.downloadBtn.style.display = 'flex'; 
+                elements.downloadBtn.href = proxyUrl; // Uzun basılabilmesi için href eklendi
+                elements.downloadBtn.onclick = (e) => { forceDownload(e, proxyUrl, false); };
+                
                 elements.profileImage.style.cursor = 'pointer'; elements.profileImage.onclick = () => openModal([{url: hdImageUrl, isVideo: false}]); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, proxyUrl);
             } else { showToast("errNotFound"); }
             return;
@@ -273,7 +299,7 @@ elements.searchBtn.addEventListener('click', async function() {
                         <div style="display:flex; gap:15px; margin-bottom:8px; font-weight:bold;"><span>${likes}</span> <span>${comments}</span></div>
                         <p style="color:#8a8a8a; font-size:12px;">${captionText}</p>
                     </div>
-                    <a href="javascript:void(0)" onclick="forceDownload('${coverMedia.url}', ${coverMedia.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
+                    <a href="${coverMedia.url}" onclick="forceDownload(event, '${coverMedia.url}', ${coverMedia.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
                 
                 const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal(cleanMediaList)); mediaEl.oncontextmenu = (e) => showContextMenu(e, coverMedia.url); }
                 attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
@@ -286,7 +312,7 @@ elements.searchBtn.addEventListener('click', async function() {
                 let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
                 div.innerHTML = `
                     ${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
-                    <a href="javascript:void(0)" onclick="forceDownload('${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
+                    <a href="${media.url}" onclick="forceDownload(event, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
                 const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
                 attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
             });
@@ -294,7 +320,10 @@ elements.searchBtn.addEventListener('click', async function() {
             elements.galleryContainer.style.display = 'none'; const media = getMediaUrl(items[0]); if (!media.url) { showToast("errVideo"); return; }
             if (media.isVideo) { elements.resultVideo.src = media.url; elements.resultVideo.style.display = 'block'; attachCinematicLoad(elements.resultVideo); elements.resultVideo.oncontextmenu = (e) => showContextMenu(e, media.url); } 
             else { elements.profileImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.profileImage.style.display = 'block'; attachCinematicLoad(elements.profileImage); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
-            elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.onclick = (e) => { e.preventDefault(); forceDownload(media.url, media.isVideo); };
+            
+            elements.downloadBtn.style.display = 'flex'; 
+            elements.downloadBtn.href = media.url;
+            elements.downloadBtn.onclick = (e) => { forceDownload(e, media.url, media.isVideo); };
         }
     } catch (error) { clearTimeout(timeoutId); hideSkeleton(); showToast("errSystem"); }
 });
@@ -313,7 +342,7 @@ async function loadHighlightStories(highlightId) {
             let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
             div.innerHTML = `
                 ${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
-                <a href="javascript:void(0)" onclick="forceDownload('${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
+                <a href="${media.url}" onclick="forceDownload(event, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
             const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
             attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
         });
@@ -331,7 +360,11 @@ function updateModalContent() {
     const media = currentMediaArray[currentMediaIndex]; elements.modalImage.style.display = 'none'; elements.modalVideo.style.display = 'none'; elements.modalVideo.pause(); elements.modalVideo.src = "";
     if (media.isVideo) { elements.modalVideo.src = media.url; elements.modalVideo.style.display = 'block'; elements.modalVideo.load(); elements.modalVideo.oncontextmenu = (e) => showContextMenu(e, media.url); } 
     else { elements.modalImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.modalImage.style.display = 'block'; elements.modalImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
-    elements.modalDownloadBtn.onclick = (e) => { e.preventDefault(); forceDownload(media.url, media.isVideo); };
+    
+    // MODAL İÇİ İNDİR BUTONU
+    elements.modalDownloadBtn.href = media.url;
+    elements.modalDownloadBtn.onclick = (e) => { forceDownload(e, media.url, media.isVideo); };
+    
     if (currentMediaArray.length > 1) { elements.modalPrev.style.display = currentMediaIndex > 0 ? 'flex' : 'none'; elements.modalNext.style.display = currentMediaIndex < currentMediaArray.length - 1 ? 'flex' : 'none'; elements.modalCounter.style.display = 'block'; elements.modalCounter.textContent = `${currentMediaIndex + 1} / ${currentMediaArray.length}`; } else { elements.modalPrev.style.display = 'none'; elements.modalNext.style.display = 'none'; elements.modalCounter.style.display = 'none'; }
 }
 function nextMedia() { if (currentMediaIndex < currentMediaArray.length - 1) { currentMediaIndex++; updateModalContent(); } }

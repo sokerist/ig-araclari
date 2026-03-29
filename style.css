@@ -1,8 +1,8 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
-/* MOBİL KAYMA (RUBBER-BAND) VE FIXED BUG'I İÇİN GÜNCELLENDİ */
-html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow-x: hidden; }
-body { background-color: transparent; color: #f8fafc; position: relative; }
+/* KAYMA SORUNUNUN KESİN ÇÖZÜMÜ: height:100% KALDIRILDI, BODY SERBEST BIRAKILDI */
+html, body { width: 100%; margin: 0; padding: 0; overflow-x: hidden; }
+body { background-color: transparent; color: #f8fafc; }
 
 .page-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 850px; margin: 60px auto; gap: 40px; position: relative; z-index: 10; padding: 0 20px; }
 
@@ -11,10 +11,10 @@ body { background-color: transparent; color: #f8fafc; position: relative; }
 ::-webkit-scrollbar-thumb { background: #1f1f1f; border-radius: 10px; border: 2px solid #050505; }
 ::-webkit-scrollbar-thumb:hover { background: #007acc; box-shadow: 0 0 10px #007acc; }
 
-/* ARKA PLANIN SABİT KALMASI İÇİN */
+/* ARKA PLAN SABİTLENDİ */
 #vanta-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; display: block !important; }
 
-/* BAYRAKLAR ARTIK KESİNLİKLE KAYMAYACAK (TRANSFORM KALDIRILDI) */
+/* BAYRAKLAR ARTIK KESİNLİKLE SABİT (FIXED) */
 .lang-wrapper { position: fixed !important; top: 20px; right: 20px; display: flex; gap: 12px; z-index: 999999; }
 .lang-btn { width: 48px; height: 32px; border-radius: 6px; overflow: hidden; cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.1); transition: opacity 0.3s ease, border-color 0.3s ease; opacity: 0.6; background-color: #0e0e0e; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); }
 .lang-btn img { width: 100%; height: 100%; object-fit: cover; }
@@ -65,7 +65,7 @@ input::placeholder { color: #4a4a4a; }
 .gallery-item img, .gallery-item video { width: 100%; height: 350px; object-fit: cover; display: block; background-color: #000; cursor: pointer; transition: transform 0.6s ease; position: relative; z-index: 5; }
 .gallery-item:hover img, .gallery-item:hover video { transform: scale(1.08); }
 .gallery-item video { object-fit: contain; }
-.dl-btn-small { display: block; background-color: #10b981; color: white; text-align: center; padding: 12px; text-decoration: none; font-weight: 600; font-size: 14px; transition: background-color 0.3s; margin-top: auto; position: relative; z-index: 10;}
+.dl-btn-small { display: block; background-color: #10b981; color: white; text-align: center; padding: 12px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.3s; margin-top: auto; position: relative; z-index: 10;}
 .dl-btn-small:hover { background-color: #059669; }
 
 .skeleton-box { background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%); background-size: 200% 100%; animation: skeletonLoading 1.5s infinite; border-radius: 16px; }
