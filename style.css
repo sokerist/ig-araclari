@@ -12,8 +12,8 @@ body { margin: 0; padding: 0; background-color: #050505; color: #f8fafc; overflo
 
 #vanta-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; display: block !important; pointer-events: none; }
 
-/* --- YENİ: PREMIUM AÇILIR DİL MENÜSÜ CSS --- */
-.lang-dropdown-container { position: fixed; top: 20px; right: 20px; z-index: 999999; }
+/* --- PREMIUM AÇILIR DİL MENÜSÜ --- */
+.lang-dropdown-container { position: fixed; top: 20px; right: 20px; z-index: 999999 !important; }
 .lang-toggle { display: flex; align-items: center; gap: 8px; background: rgba(14, 14, 14, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 14px; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: all 0.3s; }
 .lang-toggle img { width: 26px; height: 18px; object-fit: cover; border-radius: 3px; }
 .lang-toggle i { color: #fff; font-size: 13px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -24,7 +24,7 @@ body { margin: 0; padding: 0; background-color: #050505; color: #f8fafc; overflo
 .lang-menu.open { opacity: 1; visibility: visible; transform: translateY(0); }
 .lang-option { cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; display: flex; justify-content: center; }
 .lang-option img { width: 32px; height: 22px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); }
-.lang-option:hover { transform: scale(1.15); }
+.lang-option:hover { transform: scale(1.15); box-shadow: 0 0 10px rgba(255,255,255,0.2); }
 
 .container { background: rgba(14, 14, 14, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 50px 40px; border-radius: 28px; box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05); width: 100%; text-align: center; border: 1px solid rgba(255, 255, 255, 0.08); animation: fadeIn 0.6s ease-out; position: relative; z-index: 10; }
 
@@ -68,14 +68,12 @@ input::placeholder { color: #4a4a4a; }
 .gallery-item { background-color: #050505; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 20px rgba(0,0,0,0.5); display: flex; flex-direction: column; position: relative; opacity: 0; animation: cascadeFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
 .gallery-item:hover { border-color: rgba(0, 122, 204, 0.90); box-shadow: 0 20px 40px rgba(0, 122, 204, 0.25); z-index: 15; transform: translateY(-5px); }
 
-/* --- İŞTE SİHİRLİ KUTU (MEDIA BOX) --- 
-   Resim sadece bu kutunun İÇİNDE büyür, yazılara asla değemez! 
-   object-fit: cover ile mobil siyah barlar tamamen yok olur! */
-.media-box { width: 100%; height: 350px; overflow: hidden; position: relative; flex-shrink: 0; background-color: #000; }
-.media-box img, .media-box video { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+/* --- İŞTE O SİHİRLİ EFSANE KUTU (MEDIA BOX) --- */
+/* Apple'ın iğrenç taşma bug'ını engellemek için translateZ ve mask eklendi! */
+.media-box { width: 100%; height: 350px; overflow: hidden; position: relative; flex-shrink: 0; background-color: #000; border-radius: 15px 15px 0 0; transform: translateZ(0); -webkit-mask-image: -webkit-radial-gradient(white, black); }
+.media-box img, .media-box video { width: 100%; height: 100%; object-fit: cover !important; display: block; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
 .gallery-item:hover .media-box img, .gallery-item:hover .media-box video { transform: scale(1.1); }
 
-/* BİLGİ VE YAZI KUTUSU (SÜNGER GİBİ DOLDURUR) */
 .info-box-bottom { padding: 12px; background: #0e0e0e; color: #ddd; text-align: left; flex: 1; pointer-events: none; z-index: 10; border-top: 1px solid rgba(255,255,255,0.05); }
 
 .dl-btn-small { display: block; background-color: #10b981; color: white; text-align: center; padding: 12px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.3s; position: relative; z-index: 20; cursor: pointer; border: none; }
@@ -146,7 +144,20 @@ input::placeholder { color: #4a4a4a; }
 .custom-menu-item:hover { background: rgba(0, 122, 204, 0.9); color: #fff; }
 .custom-menu-item:hover i { color: #fff; }
 
+/* ========================================= */
+/* 📱 KUSURSUZ MOBİL TASARIMI VE BUG FİXLERİ */
+/* ========================================= */
 @media (max-width: 768px) {
+    /* 1. TELEFONLARDA BÜYÜME (HOVER) EFEKTİNİ İPTAL EDİYORUZ Kİ YAZIYI YUTMASIN! */
+    .gallery-item:hover { transform: none !important; border-color: rgba(255,255,255,0.1) !important; box-shadow: 0 10px 20px rgba(0,0,0,0.5) !important; }
+    .gallery-item:hover .media-box img, .gallery-item:hover .media-box video { transform: none !important; }
+
+    /* 2. AÇILIR MENÜNÜN MOBİLDE GÖZÜKMESİ İÇİN ZORUNLU KODLAR */
+    .lang-dropdown-container { top: 15px !important; right: 15px !important; z-index: 9999999 !important; }
+    .lang-toggle { padding: 6px 12px; }
+    .lang-toggle img { width: 22px; height: 15px; }
+    .lang-menu { right: 0; min-width: 180px; padding: 12px; gap: 10px; }
+
     .page-wrapper { margin: 80px auto 30px auto; padding: 0 15px; }
     .container { padding: 30px 20px; border-radius: 22px; }
     h1 { font-size: 24px; }
