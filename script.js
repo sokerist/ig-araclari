@@ -1,33 +1,609 @@
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-body { background-color: #050505; color: #f8fafc; overflow-x: hidden; }
-#vanta-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+const translations = {
+    tr: {
+        title: "Instagram Araçları | Anonim Görüntüleyici", heading: "Instagram Araçları",
+        descProfile: "Kullanıcı adını yaz ve tam boy HD profil fotoğrafını görüntüle.",
+        descPosts: "Kullanıcı adını yaz ve tüm gönderilerini (fotoğraf/video) anonim olarak incele.",
+        descVideo: "Instagram Reels veya Video linkini yapıştır ve indir.",
+        descStory: "Kullanıcı adını yaz ve aktif olan tüm hikayeleri görüntüle.",
+        descHighlight: "Kullanıcı adını yaz ve tüm Öne Çıkanlar (Highlights) albümlerini listele.",
+        tabProfile: "PROFİL FOTOĞRAFI", tabPosts: "GÖNDERİLER", tabVideo: "REELS / VİDEO", tabStory: "HİKAYE", tabHighlight: "ÖNE ÇIKANLAR",
+        placeholderUser: "kullaniciadi", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Getir", btnDownload: "İndir", btnLoadMore: "Daha Fazla Yükle",
+        errEmpty: "Lütfen aramak için bir kullanıcı adı veya link girin.",
+        errNotFound: "Kayıt bulunamadı! Lütfen bilgileri kontrol edin (Hesap gizli olabilir).",
+        errStory: "Hikaye bulunamadı. Kullanıcı paylaşım yapmamış veya hesap gizli.",
+        errHighlight: "Öne çıkan albüm bulunamadı veya hesap gizli.",
+        errVideo: "Video bulunamadı. Linki yanlış kopyalamış olabilirsiniz veya hesap gizli.",
+        errSystem: "Sistemsel bir hata oluştu. Lütfen tekrar deneyin.",
+        toastSearching: "Veriler aranıyor, lütfen bekleyin...",
+        faqHeading: "Sıkça Sorulan Sorular",
+        faq1Q: "Karşı tarafın haberi olur mu?", faq1A: "Hayır, işlemleriniz %100 anonim olarak sunucularımız üzerinden gerçekleşir. Karşı tarafa bildirim veya iz gitmez.",
+        faq2Q: "Gizli profilleri görebilir miyim?", faq2A: "Gizli profillerin sadece HD profil fotoğraflarını görüntüleyebilirsiniz. Gönderi veya hikayeler için hesapların herkese açık olması gerekmektedir.",
+        faq3Q: "Bu araç ücretsiz mi?", faq3A: "Evet, sitemizdeki tüm araçları günlük limitler dahilinde tamamen ücretsiz, şifresiz ve reklamsız olarak kullanabilirsiniz.",
+        footerText: "Instagram™ ile herhangi bir bağlantımız yoktur. Sunucularımızda Instagram içeriği barındırılmamaktadır. Tüm hakları kendi sahiplerine aittir. Gizliliğe saygı duyuyoruz — yalnızca herkese açık içerikler görüntülenebilir.",
+        btnModalDl: "İndir", menuOpen: "Tam Boyutta Aç", menuCopy: "Bağlantıyı Kopyala", menuDl: "Medyayı İndir", toastCopied: "Panoya kopyalandı!",
+        iosDlToast: "🕵️ Açılan medyaya basılı tutarak 'Fotoğraflara Kaydet' diyebilirsiniz.",
+        iosVideoToast: "📹 iOS Kısıtlaması: Açılan sekmede alt menüden 'Paylaş' ve 'Dosyalara Kaydet' seçeneğini kullanın.",
+        inAppBrowserWarn: "⚠️ Bu tarayıcı indirmeyi kısıtlıyor. Lütfen sağ üstten Safari veya Chrome'da açın."
+    },
+    en: {
+        title: "Instagram Tools | Anonymous Viewer", heading: "Instagram Tools",
+        descProfile: "Enter username to view and download full size HD profile picture.",
+        descPosts: "Enter username to anonymously view all posts (photos/videos).",
+        descVideo: "Paste Instagram Reels or Video link to download.",
+        descStory: "Enter username to view all active stories.",
+        descHighlight: "Enter username to list all Highlights albums.",
+        tabProfile: "PROFILE PICTURE", tabPosts: "POSTS", tabVideo: "REELS / VIDEO", tabStory: "STORY", tabHighlight: "HIGHLIGHTS",
+        placeholderUser: "username", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Get", btnDownload: "Download", btnLoadMore: "Load More",
+        errEmpty: "Please enter a username or link to search.",
+        errNotFound: "No records found! Please check the info (Account might be private).",
+        errStory: "No stories found. User may not have posted or account is private.",
+        errHighlight: "No highlights found or account is private.",
+        errVideo: "Video not found. Please check the link or account might be private.",
+        errSystem: "A system error occurred. Please try again later.",
+        toastSearching: "Searching for data, please wait...",
+        faqHeading: "Frequently Asked Questions",
+        faq1Q: "Will the user know I viewed their profile?", faq1A: "No, all processes are 100% anonymous through our servers. No notifications or traces are left behind.",
+        faq2Q: "Can I view private profiles?", faq2A: "You can only view HD profile pictures of private accounts. For posts and stories, the account must be public.",
+        faq3Q: "Is this tool free?", faq3A: "Yes, you can use all tools on our site completely free, without passwords and ad-free, within daily limits.",
+        footerText: "We are not affiliated with Instagram™. We do not host any Instagram content. All rights belong to their respective owners. We respect privacy — only public content is available.",
+        btnModalDl: "Download", menuOpen: "Open Full Size", menuCopy: "Copy Link", menuDl: "Download Media", toastCopied: "Copied to clipboard!",
+        iosDlToast: "🕵️ Long-press the media in the new tab to 'Save Image'.",
+        iosVideoToast: "📹 iOS Restriction: Use the Share icon below to 'Save to Files'.",
+        inAppBrowserWarn: "⚠️ This browser restricts downloads. Please open in Safari or Chrome from the menu."
+    },
+    de: {
+        title: "Instagram Tools | Anonymer Betrachter", heading: "Instagram Tools",
+        descProfile: "Benutzername eingeben, um das HD-Profilbild herunterzuladen.",
+        descPosts: "Benutzername eingeben, um alle Beiträge anonym zu betrachten.",
+        descVideo: "Instagram Reels oder Video-Link einfügen und herunterladen.",
+        descStory: "Benutzername eingeben, um aktive Storys zu sehen.",
+        descHighlight: "Benutzername eingeben, um alle Highlights zu sehen.",
+        tabProfile: "PROFILBILD", tabPosts: "BEITRÄGE", tabVideo: "REELS / VIDEO", tabStory: "STORY", tabHighlight: "HIGHLIGHTS",
+        placeholderUser: "benutzername", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Suchen", btnDownload: "Herunterladen", btnLoadMore: "Mehr laden",
+        errEmpty: "Bitte Benutzernamen oder Link eingeben.",
+        errNotFound: "Nichts gefunden! (Konto könnte privat sein).",
+        errStory: "Keine Storys gefunden oder Konto ist privat.",
+        errHighlight: "Keine Highlights gefunden.",
+        errVideo: "Video nicht gefunden.",
+        errSystem: "Systemfehler. Bitte versuchen Sie es später erneut.",
+        toastSearching: "Daten werden gesucht...",
+        faqHeading: "Häufig gestellte Fragen",
+        faq1Q: "Wird die Person es merken?", faq1A: "Nein, 100% anonym.",
+        faq2Q: "Kann ich private Profile sehen?", faq2A: "Nur das Profilbild. Für Beiträge muss das Konto öffentlich sein.",
+        faq3Q: "Ist es kostenlos?", faq3A: "Ja, komplett kostenlos.",
+        footerText: "Wir sind nicht mit Instagram™ verbunden. Alle Rechte liegen bei den jeweiligen Eigentümern.",
+        btnModalDl: "Herunterladen", menuOpen: "In voller Größe öffnen", menuCopy: "Link kopieren", menuDl: "Medien herunterladen", toastCopied: "In die Zwischenablage kopiert!",
+        iosDlToast: "🕵️ Halten Sie das Bild gedrückt, um es zu speichern.",
+        iosVideoToast: "📹 iOS-Einschränkung: Nutzen Sie das Teilen-Symbol, um in Dateien zu sichern.",
+        inAppBrowserWarn: "⚠️ Bitte in Safari oder Chrome öffnen."
+    },
+    es: {
+        title: "Herramientas Instagram | Visor Anónimo", heading: "Herramientas Instagram",
+        descProfile: "Ingresa el usuario para ver la foto de perfil en HD.",
+        descPosts: "Ingresa el usuario para ver todas las publicaciones de forma anónima.",
+        descVideo: "Pega el enlace de Reels o Video para descargar.",
+        descStory: "Ingresa el usuario para ver las historias activas.",
+        descHighlight: "Ingresa el usuario para listar los álbumes destacados.",
+        tabProfile: "FOTO DE PERFIL", tabPosts: "PUBLICACIONES", tabVideo: "REELS / VIDEO", tabStory: "HISTORIA", tabHighlight: "DESTACADOS",
+        placeholderUser: "usuario", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Buscar", btnDownload: "Descargar", btnLoadMore: "Cargar más",
+        errEmpty: "Por favor ingresa un usuario o enlace.",
+        errNotFound: "¡No encontrado! (La cuenta podría ser privada).",
+        errStory: "No se encontraron historias o la cuenta es privada.",
+        errHighlight: "No se encontraron destacados.",
+        errVideo: "Video no encontrado.",
+        errSystem: "Error del sistema. Inténtalo de nuevo.",
+        toastSearching: "Buscando datos, por favor espera...",
+        faqHeading: "Preguntas Frecuentes",
+        faq1Q: "¿La otra persona lo sabrá?", faq1A: "No, es 100% anónimo.",
+        faq2Q: "¿Puedo ver perfiles privados?", faq2A: "Solo la foto de perfil. Para publicaciones debe ser público.",
+        faq3Q: "¿Es gratis?", faq3A: "Sí, totalmente gratis.",
+        footerText: "No estamos afiliados a Instagram™.",
+        btnModalDl: "Descargar", menuOpen: "Abrir tamaño completo", menuCopy: "Copiar enlace", menuDl: "Descargar", toastCopied: "¡Copiado!",
+        iosDlToast: "🕵️ Mantén presionada la imagen para guardarla.",
+        iosVideoToast: "📹 Restricción iOS: Usa el ícono de compartir abajo para guardar en Archivos.",
+        inAppBrowserWarn: "⚠️ Por favor abre en Safari o Chrome."
+    },
+    fr: {
+        title: "Outils Instagram | Visionneuse Anonyme", heading: "Outils Instagram",
+        descProfile: "Entrez le nom d'utilisateur pour voir la photo de profil en HD.",
+        descPosts: "Entrez le nom d'utilisateur pour voir les publications anonymement.",
+        descVideo: "Collez le lien Reels ou Vidéo pour télécharger.",
+        descStory: "Entrez le nom d'utilisateur pour voir les stories.",
+        descHighlight: "Entrez le nom d'utilisateur pour voir les stories à la une.",
+        tabProfile: "PHOTO DE PROFIL", tabPosts: "PUBLICATIONS", tabVideo: "REELS / VIDÉO", tabStory: "STORY", tabHighlight: "À LA UNE",
+        placeholderUser: "nom d'utilisateur", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Chercher", btnDownload: "Télécharger", btnLoadMore: "Charger plus",
+        errEmpty: "Veuillez entrer un nom d'utilisateur ou un lien.",
+        errNotFound: "Introuvable ! (Le compte est peut-être privé).",
+        errStory: "Aucune story trouvée ou compte privé.",
+        errHighlight: "Aucune story à la une trouvée.",
+        errVideo: "Vidéo introuvable.",
+        errSystem: "Erreur système. Veuillez réessayer.",
+        toastSearching: "Recherche en cours...",
+        faqHeading: "Questions Fréquentes",
+        faq1Q: "La personne le saura-t-elle ?", faq1A: "Non, c'est 100% anonyme.",
+        faq2Q: "Puis-je voir les profils privés ?", faq2A: "Seulement la photo de profil. Les publications nécessitent un compte public.",
+        faq3Q: "Est-ce gratuit ?", faq3A: "Oui, totalement gratuit.",
+        footerText: "Nous ne sommes pas affiliés à Instagram™.",
+        btnModalDl: "Télécharger", menuOpen: "Ouvrir en taille réelle", menuCopy: "Copier le lien", menuDl: "Télécharger le média", toastCopied: "Copié !",
+        iosDlToast: "🕵️ Appuyez longuement sur l'image pour l'enregistrer.",
+        iosVideoToast: "📹 Restriction iOS: Utilisez l'icône de partage pour enregistrer dans Fichiers.",
+        inAppBrowserWarn: "⚠️ Veuillez ouvrir dans Safari ou Chrome."
+    },
+    ru: {
+        title: "Инструменты Instagram | Анонимный просмотр", heading: "Инструменты Instagram",
+        descProfile: "Введите имя пользователя для просмотра фото профиля в HD.",
+        descPosts: "Введите имя пользователя для анонимного просмотра публикаций.",
+        descVideo: "Вставьте ссылку на Reels или видео для загрузки.",
+        descStory: "Введите имя пользователя для просмотра историй.",
+        descHighlight: "Введите имя пользователя для просмотра актуального.",
+        tabProfile: "ФОТО ПРОФИЛЯ", tabPosts: "ПУБЛИКАЦИИ", tabVideo: "REELS / ВИДЕО", tabStory: "ИСТОРИИ", tabHighlight: "АКТУАЛЬНОЕ",
+        placeholderUser: "имя пользователя", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Искать", btnDownload: "Скачать", btnLoadMore: "Загрузить еще",
+        errEmpty: "Пожалуйста, введите имя пользователя или ссылку.",
+        errNotFound: "Не найдено! (Аккаунт может быть приватным).",
+        errStory: "Истории не найдены или аккаунт приватный.",
+        errHighlight: "Актуальное не найдено.",
+        errVideo: "Видео не найдено.",
+        errSystem: "Системная ошибка. Попробуйте позже.",
+        toastSearching: "Поиск данных...",
+        faqHeading: "Частые вопросы",
+        faq1Q: "Узнает ли об этом пользователь?", faq1A: "Нет, это 100% анонимно.",
+        faq2Q: "Могу ли я смотреть приватные профили?", faq2A: "Только фото профиля. Для публикаций аккаунт должен быть открытым.",
+        faq3Q: "Это бесплатно?", faq3A: "Да, абсолютно бесплатно.",
+        footerText: "Мы не связаны с Instagram™.",
+        btnModalDl: "Скачать", menuOpen: "Открыть в полном размере", menuCopy: "Скопировать ссылку", menuDl: "Скачать медиа", toastCopied: "Скопировано!",
+        iosDlToast: "🕵️ Нажмите и удерживайте, чтобы сохранить.",
+        iosVideoToast: "📹 Ограничение iOS: Используйте значок «Поделиться», чтобы сохранить в файлы.",
+        inAppBrowserWarn: "⚠️ Пожалуйста, откройте в Safari или Chrome."
+    }
+};
 
-.page-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 850px; margin: 60px auto; padding: 0 20px; z-index: 10; position: relative; }
+let currentLang = 'tr'; let currentMode = 'profile'; let contextMediaUrl = '';
+let globalMaxId = ''; 
+let lastSearchedUser = ''; 
 
-.container { background: rgba(14, 14, 14, 0.75); backdrop-filter: blur(20px); padding: 50px 40px; border-radius: 28px; border: 1px solid rgba(255, 255, 255, 0.08); width: 100%; text-align: center; }
+const elements = {
+    tabs: document.querySelectorAll('.tab-btn'), mainInput: document.getElementById('mainInput'),
+    inputIcon: document.getElementById('inputIcon'), descText: document.getElementById('descText'),
+    searchBtn: document.getElementById('searchBtn'), profileImage: document.getElementById('profileImage'),
+    resultVideo: document.getElementById('resultVideo'), galleryContainer: document.getElementById('galleryContainer'),
+    toastContainer: document.getElementById('toastContainer'), searchHistory: document.getElementById('searchHistory'),
+    mediaModal: document.getElementById('mediaModal'), modalImage: document.getElementById('modalImage'),
+    modalVideo: document.getElementById('modalVideo'), closeModalBtn: document.querySelector('.close-modal'),
+    modalPrev: document.getElementById('modalPrev'), modalNext: document.getElementById('modalNext'),
+    modalCounter: document.getElementById('modalCounter'), modalDownloadBtn: document.getElementById('modalDownloadBtn'),
+    modalCopyBtn: document.getElementById('modalCopyBtn'), modalDlText: document.getElementById('modalDlText'),
+    contextMenu: document.getElementById('customContextMenu'), menuOpen: document.getElementById('menuOpen'),
+    menuCopy: document.getElementById('menuCopy'), menuDownload: document.getElementById('menuDownload'),
+    downloadBtn: document.getElementById('downloadBtn'), clearInputBtn: document.getElementById('clearInputBtn'),
+    scrollTopBtn: document.getElementById('scrollTopBtn'),
+    langToggle: document.getElementById('langToggle'), langMenu: document.getElementById('langMenu'), activeLangIcon: document.getElementById('activeLangIcon'),
+    loadMoreBtn: document.getElementById('loadMoreBtn') 
+};
 
-.main-logo { width: 50px; margin-bottom: 15px; }
-h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
-#descText { color: #8a8a8a; margin-bottom: 35px; }
+elements.langToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    elements.langMenu.classList.toggle('open');
+    elements.langToggle.classList.toggle('open');
+});
+document.addEventListener('click', (e) => {
+    if(!elements.langToggle.contains(e.target) && !elements.langMenu.contains(e.target)) {
+        elements.langMenu.classList.remove('open');
+        elements.langToggle.classList.remove('open');
+    }
+});
+window.changeLanguage = function(lang, flagUrl) {
+    currentLang = lang;
+    if(flagUrl) elements.activeLangIcon.src = flagUrl;
+    elements.langMenu.classList.remove('open');
+    elements.langToggle.classList.remove('open');
+    updateUI();
+};
 
-.tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
-.tab-btn { background: rgba(255,255,255,0.03); color: #8a8a8a; border: none; padding: 12px 20px; border-radius: 12px; cursor: pointer; transition: 0.3s; font-weight: 600; }
-.tab-btn.active { background: #007acc; color: #fff; box-shadow: 0 10px 20px rgba(0,122,204,0.3); }
+function triggerVibration() { if (navigator.vibrate) navigator.vibrate(40); }
 
-.search-box { display: flex; background: rgba(0,0,0,0.4); border-radius: 20px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); max-width: 600px; margin: 0 auto; }
-.input-wrapper { display: flex; align-items: center; flex: 1; padding-left: 15px; }
-.at-symbol { color: #007acc; margin-right: 10px; }
-input { background: transparent; border: none; outline: none; color: #fff; width: 100%; padding: 10px; font-size: 16px; }
+elements.mainInput.addEventListener('input', function() {
+    if(this.value.length > 0) elements.clearInputBtn.style.display = 'block';
+    else elements.clearInputBtn.style.display = 'none';
+});
+elements.clearInputBtn.addEventListener('click', () => { elements.mainInput.value = ''; elements.clearInputBtn.style.display = 'none'; elements.mainInput.focus(); });
+window.addEventListener('scroll', () => { if (window.scrollY > 300) elements.scrollTopBtn.classList.add('visible'); else elements.scrollTopBtn.classList.remove('visible'); });
+elements.scrollTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-#searchBtn { background: #007acc; color: #fff; border: none; padding: 12px 25px; border-radius: 14px; cursor: pointer; font-weight: 800; }
+// 🕵️‍♂️ İŞTE BURASI: APPLE'I BYPASS EDEN YENİ İNDİRME MOTORU
+window.forceDownload = async function(event, btn, url, isVideo) {
+    if(event) event.preventDefault();
+    triggerVibration(); 
 
-.info-container { margin-top: 40px; width: 100%; }
-.accordion-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 15px; margin-bottom: 10px; }
-.accordion-header { width: 100%; padding: 20px; background: none; border: none; color: #fff; text-align: left; cursor: pointer; display: flex; justify-content: space-between; }
-.accordion-content { padding: 0 20px 20px; color: #8a8a8a; display: none; }
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    const inAppBrowser = /FBAN|FBAV|Instagram|WhatsApp|Line|Snapchat/i.test(userAgent);
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-@media (max-width: 600px) {
-    .container { padding: 30px 20px; }
-    h1 { font-size: 24px; }
-    .tab-btn { padding: 10px 15px; font-size: 12px; }
+    if (inAppBrowser) {
+        showToast('inAppBrowserWarn', 'error');
+        if(!isIOS || isVideo) return false; 
+    }
+
+    // --- ANDROID ve BİLGİSAYAR İÇİN STANDART DİREKT İNDİRME ---
+    if (!isIOS) {
+        const a = document.createElement('a');
+        a.href = url + (url.includes('?') ? '&dl=1' : '?dl=1');
+        a.target = '_blank';
+        a.download = `instagram_medya_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return false;
+    }
+
+    // --- KURŞUN GEÇİRMEZ iOS ÇÖZÜMÜ ---
+    // Apple'ın popup engelleyicisi setTimeout veya fetch işlemlerine müsaade etmez. 
+    // Tıklandığı milisaniye içinde direkt sekme açtırıyoruz.
+    
+    if (isVideo) {
+        showToast('iosVideoToast', 'info', false);
+    } else {
+        showToast('iosDlToast', 'info', false);
+    }
+
+    // Bekleme Yok, Animasyon Yok. Direkt Açılış.
+    window.open(url, '_blank');
+
+    // Sadece butonda güzel bir görsel efekt verelim.
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<i class="fa-solid fa-check"></i> Açıldı`;
+    btn.style.backgroundColor = "#10b981"; 
+    
+    setTimeout(() => { 
+        btn.innerHTML = originalText; 
+        btn.style.backgroundColor = ""; 
+    }, 2500);
+
+    return false;
+};
+
+elements.searchBtn.addEventListener('mousemove', (e) => {
+    if(window.innerWidth < 768) return; 
+    const rect = elements.searchBtn.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2; const y = e.clientY - rect.top - rect.height / 2;
+    elements.searchBtn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`; elements.searchBtn.style.transition = 'none';
+});
+elements.searchBtn.addEventListener('mouseleave', () => { 
+    if(window.innerWidth < 768) return;
+    elements.searchBtn.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)'; elements.searchBtn.style.transform = 'translate(0px, 0px)'; 
+});
+
+function attachSpotlightEffect(div) {
+    if(window.innerWidth < 768) return; 
+    div.addEventListener('mousemove', (e) => {
+        const rect = div.getBoundingClientRect(); const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+        div.style.setProperty('--mouse-x', `${x}px`); div.style.setProperty('--mouse-y', `${y}px`);
+    });
 }
+function attachCinematicLoad(element) {
+    element.classList.remove('loaded');
+    if(element.tagName === 'IMG') { if(element.complete) element.classList.add('loaded'); else element.onload = () => element.classList.add('loaded'); } 
+    else if(element.tagName === 'VIDEO') { if(element.readyState >= 3) element.classList.add('loaded'); else element.onloadeddata = () => element.classList.add('loaded'); }
+}
+function showContextMenu(e, url) {
+    e.preventDefault(); contextMediaUrl = url; elements.contextMenu.style.display = 'block';
+    let x = e.clientX; let y = e.clientY; let menuWidth = elements.contextMenu.offsetWidth; let menuHeight = elements.contextMenu.offsetHeight;
+    if (x + menuWidth > window.innerWidth) x -= menuWidth; if (y + menuHeight > window.innerHeight) y -= menuHeight;
+    elements.contextMenu.style.left = `${x}px`; elements.contextMenu.style.top = `${y}px`;
+}
+
+document.addEventListener('click', () => { elements.contextMenu.style.display = 'none'; });
+window.addEventListener('scroll', () => { elements.contextMenu.style.display = 'none'; });
+elements.menuOpen.onclick = () => { window.open(contextMediaUrl, '_blank'); };
+elements.menuDownload.onclick = (e) => { return forceDownload(e, elements.menuDownload, contextMediaUrl, contextMediaUrl.includes('.mp4')); };
+elements.menuCopy.onclick = () => { navigator.clipboard.writeText(contextMediaUrl); showToast('toastCopied', 'success', false); };
+
+elements.modalCopyBtn.onclick = () => {
+    let url = currentMediaArray[currentMediaIndex].url; navigator.clipboard.writeText(url);
+    let icon = elements.modalCopyBtn.querySelector('i'); icon.className = 'fa-solid fa-check'; icon.style.color = '#10b981'; showToast('toastCopied', 'success', false);
+    setTimeout(() => { icon.className = 'fa-solid fa-link'; icon.style.color = ''; }, 2000);
+};
+
+function loadHistory() {
+    if (currentMode === 'video') { elements.searchHistory.style.display = 'none'; return; }
+    let history = JSON.parse(localStorage.getItem('ig_history_v2') || '[]'); if(history.length === 0) { elements.searchHistory.style.display = 'none'; return; }
+    elements.searchHistory.style.display = 'flex'; elements.searchHistory.innerHTML = '';
+    history.forEach(item => {
+        let tag = document.createElement('div'); tag.className = 'history-tag';
+        let fallbackPic = `https://ui-avatars.com/api/?name=${item.user}&background=007acc&color=fff&rounded=true&bold=true`;
+        tag.innerHTML = `<img src="${item.pic ? item.pic : fallbackPic}" class="history-img" alt="${item.user}"> <span>${item.user}</span>`;
+        tag.onclick = () => { elements.mainInput.value = item.user; elements.searchBtn.click(); }; elements.searchHistory.appendChild(tag);
+    });
+}
+function saveHistory(username, picUrl = null) {
+    if(currentMode === 'video' || !username) return;
+    let history = JSON.parse(localStorage.getItem('ig_history_v2') || '[]'); history = history.filter(item => item.user !== username); history.unshift({ user: username, pic: picUrl }); 
+    if(history.length > 4) history.pop(); localStorage.setItem('ig_history_v2', JSON.stringify(history)); loadHistory();
+}
+function cleanInput(val) {
+    let cleaned = val.trim(); if(currentMode === 'video') return cleaned; 
+    if(cleaned.includes('instagram.com/')) { try { let url = new URL(cleaned.startsWith('http') ? cleaned : 'https://' + cleaned); let pathParts = url.pathname.split('/').filter(p => p.length > 0); if(pathParts.length > 0 && pathParts[0] !== 'p' && pathParts[0] !== 'reel' && pathParts[0] !== 'tv') { cleaned = pathParts[0]; } } catch(e) {} }
+    if(cleaned.startsWith('@')) cleaned = cleaned.substring(1); cleaned = cleaned.split('?')[0].split('/')[0]; return cleaned;
+}
+function updateUI() {
+    if(!translations[currentLang]) currentLang = 'en';
+    const t = translations[currentLang]; document.title = t.title; document.getElementById('mainHeading').textContent = t.heading; document.getElementById('btnText').textContent = t.btnGet;
+    document.getElementById('tabProfile').querySelector('.tab-text').textContent = t.tabProfile; document.getElementById('tabPosts').querySelector('.tab-text').textContent = t.tabPosts;
+    document.getElementById('tabVideo').querySelector('.tab-text').textContent = t.tabVideo; document.getElementById('tabStory').querySelector('.tab-text').textContent = t.tabStory;
+    document.getElementById('tabHighlight').querySelector('.tab-text').textContent = t.tabHighlight;
+    document.getElementById('faqHeading').textContent = t.faqHeading; document.getElementById('faq1Q').textContent = t.faq1Q; document.getElementById('faq1A').textContent = t.faq1A;
+    document.getElementById('faq2Q').textContent = t.faq2Q; document.getElementById('faq2A').textContent = t.faq2A; document.getElementById('faq3Q').textContent = t.faq3Q; document.getElementById('faq3A').textContent = t.faq3A;
+    document.getElementById('footerText').textContent = t.footerText; document.getElementById('menuTextOpen').textContent = t.menuOpen; document.getElementById('menuTextCopy').textContent = t.menuCopy;
+    document.getElementById('menuTextDl').textContent = t.menuDl; elements.modalDlText.textContent = t.btnModalDl; 
+    if(elements.loadMoreBtn.style.display !== 'none') elements.loadMoreBtn.innerHTML = `<i class="fa-solid fa-arrow-rotate-right"></i> ${t.btnLoadMore}`;
+    updateModeText();
+}
+function updateModeText() {
+    const t = translations[currentLang]; const modeMap = { 'profile': { desc: t.descProfile, place: t.placeholderUser }, 'posts': { desc: t.descPosts, place: t.placeholderUser }, 'video': { desc: t.descVideo, place: t.placeholderUrl }, 'story': { desc: t.descStory, place: t.placeholderUser }, 'highlight': { desc: t.descHighlight, place: t.placeholderUser } };
+    elements.descText.textContent = modeMap[currentMode].desc; elements.mainInput.placeholder = modeMap[currentMode].place;
+}
+function showToast(msgKey, type = 'error', directMsg = false) {
+    const msg = directMsg ? msgKey : (translations[currentLang][msgKey] || msgKey);
+    const toast = document.createElement('div'); toast.className = `toast ${type}`; let icon = type === 'error' ? 'fa-circle-exclamation' : (type === 'success' ? 'fa-check-circle' : 'fa-info-circle');
+    toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${msg}</span>`; elements.toastContainer.appendChild(toast); setTimeout(() => { if(toast.parentElement) toast.remove(); }, 4700);
+}
+function showSkeleton() {
+    elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none'; elements.downloadBtn.style.display = 'none'; elements.galleryContainer.innerHTML = ''; elements.galleryContainer.style.display = 'grid';
+    if (currentMode === 'profile' || currentMode === 'video') { elements.galleryContainer.style.display = 'flex'; elements.galleryContainer.innerHTML = `<div class="skeleton-box skeleton-profile"></div>`; } 
+    else { for(let i=0; i<6; i++) { elements.galleryContainer.innerHTML += `<div class="gallery-item"><div class="skeleton-box skeleton-gallery"></div></div>`; } }
+}
+function hideSkeleton() { elements.galleryContainer.innerHTML = ''; }
+function switchTab(mode, iconClass, btnId) {
+    triggerVibration(); 
+    currentMode = mode; elements.tabs.forEach(btn => btn.classList.remove('active')); document.getElementById(btnId).classList.add('active');
+    elements.inputIcon.innerHTML = `<i class="fa-solid ${iconClass}"></i>`; elements.galleryContainer.style.display = 'none'; elements.galleryContainer.innerHTML = '';
+    elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none'; elements.downloadBtn.style.display = 'none'; elements.mainInput.value = ''; elements.clearInputBtn.style.display = 'none'; 
+    globalMaxId = ''; lastSearchedUser = ''; elements.loadMoreBtn.style.display = 'none'; 
+    updateModeText(); loadHistory(); 
+}
+
+document.getElementById('tabProfile').addEventListener('click', () => switchTab('profile', 'fa-user-circle', 'tabProfile'));
+document.getElementById('tabPosts').addEventListener('click', () => switchTab('posts', 'fa-border-all', 'tabPosts'));
+document.getElementById('tabVideo').addEventListener('click', () => switchTab('video', 'fa-play', 'tabVideo'));
+document.getElementById('tabStory').addEventListener('click', () => switchTab('story', 'fa-clock-rotate-left', 'tabStory'));
+document.getElementById('tabHighlight').addEventListener('click', () => switchTab('highlight', 'fa-star', 'tabHighlight'));
+
+function getMediaUrl(item) {
+    let url = null; let isVideo = false;
+    if (item.urls && item.urls.length > 0) { url = item.urls[0].url; } else if (item.video_versions && item.video_versions.length > 0) { url = item.video_versions[0].url; isVideo = true; } else if (item.image_versions2 && item.image_versions2.candidates) { url = item.image_versions2.candidates[0].url; } else if (item.video_url) { url = item.video_url; isVideo = true; } else if (item.display_url) { url = item.display_url; } else if (item.url) { url = item.url; }
+    if(url && url.includes('.mp4')) isVideo = true; return { url, isVideo };
+}
+function forceHdUrl(url) { if(!url) return url; return url.replace(/\/s\d+x\d+\//g, '/').replace(/\/c\d+\.\d+\.\d+\.\d+[a-zA-Z]*\//g, '/'); }
+
+
+async function executeSearch(isLoadMore = false) {
+    triggerVibration(); 
+    
+    let rawInputValue = isLoadMore ? lastSearchedUser : elements.mainInput.value;
+    if (!isLoadMore && rawInputValue.trim() === '') { showToast('errEmpty'); return; }
+    
+    const inputValue = isLoadMore ? rawInputValue : cleanInput(rawInputValue);
+    
+    if(!isLoadMore) {
+        globalMaxId = ''; 
+        lastSearchedUser = inputValue;
+        elements.galleryContainer.innerHTML = '';
+        elements.profileImage.style.display = 'none';
+        elements.resultVideo.style.display = 'none';
+        elements.downloadBtn.style.display = 'none';
+        elements.loadMoreBtn.style.display = 'none';
+        showToast('toastSearching', 'info'); 
+        showSkeleton();
+    } else {
+        elements.loadMoreBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Bekleyin...`;
+        elements.loadMoreBtn.style.pointerEvents = 'none';
+    }
+
+    let apiUrl = ''; let payload = {};
+    if (currentMode === 'profile') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/userInfo'; payload = { username: inputValue }; } 
+    else if (currentMode === 'posts') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/posts'; payload = { username: inputValue, maxId: globalMaxId, end_cursor: globalMaxId }; } 
+    else if (currentMode === 'video') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/links'; payload = { url: inputValue }; } 
+    else if (currentMode === 'story') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/stories'; payload = { username: inputValue }; }
+    else if (currentMode === 'highlight') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/highlights'; payload = { username: inputValue }; }
+
+    const cacheKey = `ig_cache_${currentMode}_${inputValue}_${globalMaxId}`;
+    const cachedData = sessionStorage.getItem(cacheKey);
+    let data;
+
+    if (cachedData) {
+        data = JSON.parse(cachedData);
+        if(!isLoadMore) { 
+            setTimeout(() => {
+                hideSkeleton();
+                sessionStorage.removeItem(cacheKey); 
+                executeSearch(false); 
+            }, 300); 
+            return; 
+        } 
+    } else {
+        const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const options = { method: 'POST', headers: { 'x-rapidapi-key': 'e85b603960msh904e3ba53ac93dbp1c3ff8jsn852b00b91449', 'x-rapidapi-host': 'instagram120.p.rapidapi.com', 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: controller.signal };
+
+        try {
+            const response = await fetch(apiUrl, options); clearTimeout(timeoutId); 
+            if(!isLoadMore) hideSkeleton(); 
+            data = await response.json(); 
+            if(data && !data.message) { sessionStorage.setItem(cacheKey, JSON.stringify(data)); }
+        } catch (error) { controller.abort(); }
+    }
+
+    try {
+        if (currentMode === 'profile') {
+            let hdImageUrl = null; if (data && data.result && data.result.length > 0 && data.result[0].user) { const userObj = data.result[0].user; hdImageUrl = userObj.hd_profile_pic_url_info?.url || userObj.profile_pic_url_hd || userObj.profile_pic_url; }
+            if (hdImageUrl) {
+                const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(hdImageUrl)}`; elements.profileImage.src = proxyUrl; elements.profileImage.style.display = 'block'; attachCinematicLoad(elements.profileImage);
+                if(!cachedData) showToast(translations[currentLang].btnGet + " başarılı!", 'success', true); 
+                saveHistory(inputValue, proxyUrl); 
+                elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.href = proxyUrl; 
+                elements.downloadBtn.onclick = (e) => { return window.forceDownload(e, elements.downloadBtn, proxyUrl, false); };
+                elements.profileImage.style.cursor = 'pointer'; elements.profileImage.onclick = () => openModal([{url: hdImageUrl, isVideo: false}]); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, proxyUrl);
+            } else { showToast("errNotFound"); }
+            return;
+        }
+
+        let items = []; if (currentMode === 'posts') { if (data && data.result && data.result.edges) { items = data.result.edges.map(edge => edge.node); } else if (data && data.data && data.data.user && data.data.user.edge_owner_to_timeline_media) { items = data.data.user.edge_owner_to_timeline_media.edges.map(e => e.node); } else if (data && data.edges) { items = data.edges.map(edge => edge.node); } else if (data && data.items) { items = data.items; } } else { items = Array.isArray(data) ? data : (data.result ? data.result : [data]); }
+
+        let hasMore = false;
+        if(currentMode === 'posts' && data) {
+            let foundMaxId = '';
+            if (data.next_max_id) foundMaxId = data.next_max_id;
+            else if (data.result && data.result.next_max_id) foundMaxId = data.result.next_max_id;
+            else if (data.result && data.result.paging_info && data.result.paging_info.max_id) foundMaxId = data.result.paging_info.max_id;
+            else if (data.data && data.data.user && data.data.user.edge_owner_to_timeline_media && data.data.user.edge_owner_to_timeline_media.page_info) foundMaxId = data.data.user.edge_owner_to_timeline_media.page_info.end_cursor;
+            else if (data.paging_info && data.paging_info.max_id) foundMaxId = data.paging_info.max_id;
+            else if (Array.isArray(data) && data.length > 0 && data[data.length - 1].id) foundMaxId = data[data.length - 1].id;
+
+            globalMaxId = foundMaxId;
+            hasMore = (globalMaxId && globalMaxId !== '') ? true : false;
+            
+            if (!hasMore && items && items.length >= 12) {
+                let lastItem = items[items.length - 1];
+                globalMaxId = lastItem.id || lastItem.pk;
+                hasMore = true;
+            }
+        }
+
+        if (!items || items.length === 0 || !items[0]) { 
+            if(!isLoadMore) {
+                if (currentMode === 'story') showToast("errStory"); else if (currentMode === 'highlight') showToast("errHighlight"); else if (currentMode === 'video') showToast("errVideo"); else showToast("errNotFound"); 
+            } else {
+                elements.loadMoreBtn.style.display = 'none';
+            }
+            return; 
+        }
+
+        elements.galleryContainer.style.display = 'grid'; 
+        if(!isLoadMore && !cachedData) showToast("Sonuçlar bulundu!", 'success', true);
+        
+        let extractedPic = null; if (items && items.length > 0 && items[0].user && items[0].user.profile_pic_url) { extractedPic = `https://wsrv.nl/?url=${encodeURIComponent(items[0].user.profile_pic_url)}`; } saveHistory(inputValue, extractedPic);
+
+        if (currentMode === 'highlight') {
+            items.forEach((album, index) => {
+                let albumId = album.id || album.highlightId; let title = album.title || "Albüm"; let rawCoverUrl = album.cover_media?.image_versions2?.candidates?.[0]?.url || album.cover_media?.cropped_image_version?.url || album.cover;
+                if(!albumId) return; let finalCoverUrl = rawCoverUrl ? `https://wsrv.nl/?url=${encodeURIComponent(forceHdUrl(rawCoverUrl))}` : 'https://via.placeholder.com/250x250/0e0e0e/007acc?text=Album';
+                const div = document.createElement('div'); div.className = 'gallery-item'; div.style.cursor = 'pointer'; div.style.animationDelay = `${index * 0.05}s`;
+                div.innerHTML = `<div class="media-box"><img src="${finalCoverUrl}" loading="lazy" class="cinematic-media"></div> <div class="info-box-bottom" style="text-align: center; justify-content:center; display:flex; align-items:center; background: rgba(0, 122, 204, 0.8); color: #fff; font-weight: bold;"><i class="fa-solid fa-folder-open" style="margin-right:8px;"></i> ${title}</div>`;
+                div.onclick = () => loadHighlightStories(albumId); const img = div.querySelector('img'); if(img) attachCinematicLoad(img); attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
+            }); return;
+        }
+
+        if (currentMode === 'posts') {
+            if(!isLoadMore) elements.galleryContainer.innerHTML = ''; 
+
+            items.forEach((item, index) => {
+                let mediaArray = []; if (item.carousel_media && item.carousel_media.length > 0) { mediaArray = item.carousel_media; } else if (item.edge_sidecar_to_children && item.edge_sidecar_to_children.edges) { mediaArray = item.edge_sidecar_to_children.edges.map(e => e.node); } else { mediaArray = [item]; }
+                if(mediaArray.length === 0) return; let cleanMediaList = mediaArray.map(m => getMediaUrl(m)).filter(m => m.url); if(cleanMediaList.length === 0) cleanMediaList = [getMediaUrl(item)]; let coverMedia = cleanMediaList[0];
+                let captionText = item.caption && item.caption.text ? item.caption.text.substring(0, 80) + "..." : ""; if (!captionText && item.edge_media_to_caption && item.edge_media_to_caption.edges.length > 0) { captionText = item.edge_media_to_caption.edges[0].node.text.substring(0, 80) + "..."; }
+                let likes = item.like_count ? `<i class="fa-solid fa-heart" style="color:#ef4444;"></i> ${item.like_count}` : ""; if(!likes && item.edge_media_preview_like) likes = `<i class="fa-solid fa-heart" style="color:#ef4444;"></i> ${item.edge_media_preview_like.count}`;
+                let comments = item.comment_count ? `<i class="fa-solid fa-comment" style="color:#007acc;"></i> ${item.comment_count}` : ""; if(!comments && item.edge_media_to_comment) comments = `<i class="fa-solid fa-comment" style="color:#007acc;"></i> ${item.edge_media_to_comment.count}`;
+
+                let mediaHtml = coverMedia.isVideo ? `<video src="${coverMedia.url}" preload="metadata" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(coverMedia.url)}" loading="lazy" class="cinematic-media">`;
+                let badgeHtml = ''; if (cleanMediaList.length > 1) { badgeHtml = `<div class="carousel-badge"><i class="fa-solid fa-clone"></i></div>`; } else if (coverMedia.isVideo) { badgeHtml = `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>`; }
+
+                const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
+                div.innerHTML = `<div class="media-box">${badgeHtml} ${mediaHtml}</div><div class="info-box-bottom"><div style="display:flex; gap:15px; margin-bottom:8px; font-weight:bold;"><span>${likes}</span> <span>${comments}</span></div><p style="color:#8a8a8a; font-size:12px;">${captionText}</p></div><a href="${coverMedia.url}" onclick="return window.forceDownload(event, this, '${coverMedia.url}', ${coverMedia.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
+                
+                const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal(cleanMediaList)); mediaEl.oncontextmenu = (e) => showContextMenu(e, coverMedia.url); }
+                attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
+            }); 
+            
+            if(hasMore) {
+                elements.loadMoreBtn.style.display = 'flex';
+                elements.loadMoreBtn.innerHTML = `<i class="fa-solid fa-arrow-rotate-right"></i> ${translations[currentLang].btnLoadMore}`;
+                elements.loadMoreBtn.style.pointerEvents = 'auto';
+            } else {
+                elements.loadMoreBtn.style.display = 'none';
+            }
+            return;
+        }
+
+        if (items.length > 1 || currentMode === 'story') {
+            items.forEach((item, index) => {
+                const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
+                let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
+                div.innerHTML = `<div class="media-box">${badgeHtml} ${media.isVideo ? `<video src="${media.url}" preload="metadata" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" loading="lazy" class="cinematic-media">`}</div><a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
+                const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
+                attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
+            });
+        } else {
+            elements.galleryContainer.style.display = 'none'; const media = getMediaUrl(items[0]); if (!media.url) { showToast("errVideo"); return; }
+            if (media.isVideo) { elements.resultVideo.src = media.url; elements.resultVideo.style.display = 'block'; attachCinematicLoad(elements.resultVideo); elements.resultVideo.oncontextmenu = (e) => showContextMenu(e, media.url); } 
+            else { elements.profileImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.profileImage.style.display = 'block'; attachCinematicLoad(elements.profileImage); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
+            elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.href = media.url;
+            elements.downloadBtn.onclick = (e) => { return window.forceDownload(e, elements.downloadBtn, media.url, media.isVideo); };
+        }
+    } catch (err) {}
+}
+
+elements.searchBtn.addEventListener('click', () => executeSearch(false));
+elements.loadMoreBtn.addEventListener('click', () => executeSearch(true));
+
+async function loadHighlightStories(highlightId) {
+    showToast('toastSearching', 'info'); showSkeleton();
+    const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 15000);
+    const options = { method: 'POST', headers: { 'x-rapidapi-key': 'e85b603960msh904e3ba53ac93dbp1c3ff8jsn852b00b91449', 'x-rapidapi-host': 'instagram120.p.rapidapi.com', 'Content-Type': 'application/json' }, body: JSON.stringify({ highlightId: highlightId }), signal: controller.signal };
+
+    try {
+        const response = await fetch('https://instagram120.p.rapidapi.com/api/instagram/highlightStories', options); clearTimeout(timeoutId); hideSkeleton(); let data = await response.json(); 
+        let items = Array.isArray(data) ? data : (data.result ? data.result : [data]); if (!items || items.length === 0 || !items[0]) { showToast("errHighlight"); return; }
+        elements.galleryContainer.style.display = 'grid';
+        items.forEach((item, index) => {
+            const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
+            let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
+            div.innerHTML = `<div class="media-box">${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" loading="lazy" class="cinematic-media">`}</div><a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
+            const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
+            attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
+        });
+    } catch (error) { controller.abort(); }
+}
+
+document.querySelectorAll('.accordion-header').forEach(button => { button.addEventListener('click', () => { const content = button.nextElementSibling; button.classList.toggle('active'); if (button.classList.contains('active')) { content.style.maxHeight = content.scrollHeight + 'px'; } else { content.style.maxHeight = 0; } }); });
+
+let currentMediaArray = []; let currentMediaIndex = 0;
+
+function openModal(mediaArray) {
+    triggerVibration();
+    document.querySelector('.lang-dropdown-container').style.display = 'none'; 
+    if(!mediaArray || mediaArray.length === 0) return; currentMediaArray = mediaArray; currentMediaIndex = 0;
+    elements.mediaModal.style.display = 'block'; document.body.style.overflow = 'hidden'; updateModalContent();
+}
+function closeModal() { 
+    elements.mediaModal.style.display = 'none'; 
+    elements.modalVideo.pause(); 
+    elements.modalVideo.src = ""; 
+    document.body.style.overflow = 'auto'; 
+    document.querySelector('.lang-dropdown-container').style.display = 'block'; 
+}
+
+function updateModalContent() {
+    const media = currentMediaArray[currentMediaIndex]; elements.modalImage.style.display = 'none'; elements.modalVideo.style.display = 'none'; elements.modalVideo.pause(); elements.modalVideo.src = "";
+    if (media.isVideo) { elements.modalVideo.src = media.url; elements.modalVideo.style.display = 'block'; elements.modalVideo.load(); elements.modalVideo.oncontextmenu = (e) => showContextMenu(e, media.url); } 
+    else { elements.modalImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.modalImage.style.display = 'block'; elements.modalImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
+    
+    elements.modalDownloadBtn.href = media.url;
+    elements.modalDownloadBtn.onclick = (e) => { return window.forceDownload(e, elements.modalDownloadBtn, media.url, media.isVideo); };
+    
+    if (currentMediaArray.length > 1) { elements.modalPrev.style.display = currentMediaIndex > 0 ? 'flex' : 'none'; elements.modalNext.style.display = currentMediaIndex < currentMediaArray.length - 1 ? 'flex' : 'none'; elements.modalCounter.style.display = 'block'; elements.modalCounter.textContent = `${currentMediaIndex + 1} / ${currentMediaArray.length}`; } else { elements.modalPrev.style.display = 'none'; elements.modalNext.style.display = 'none'; elements.modalCounter.style.display = 'none'; }
+}
+function nextMedia() { if (currentMediaIndex < currentMediaArray.length - 1) { currentMediaIndex++; updateModalContent(); triggerVibration(); } }
+function prevMedia() { if (currentMediaIndex > 0) { currentMediaIndex--; updateModalContent(); triggerVibration(); } }
+
+elements.modalNext.addEventListener('click', nextMedia); elements.modalPrev.addEventListener('click', prevMedia);
+if (elements.closeModalBtn) elements.closeModalBtn.addEventListener('click', closeModal);
+if (elements.mediaModal) elements.mediaModal.addEventListener('click', e => { if (e.target === elements.mediaModal || e.target.classList.contains('modal-content')) closeModal(); });
+document.addEventListener('keydown', e => { if (elements.mediaModal.style.display === 'block') { if (e.key === 'Escape') closeModal(); if (e.key === 'ArrowRight') nextMedia(); if (e.key === 'ArrowLeft') prevMedia(); } });
+
+async function autoDetect() { try { const res = await fetch('https://ipapi.co/json/'); const data = await res.json(); changeLanguage(data.country_code === 'TR' ? 'tr' : 'en'); } catch (e) { changeLanguage('tr'); } loadHistory(); }
+autoDetect();
+
+window.addEventListener('DOMContentLoaded', () => { VANTA.CLOUDS({ el: "#vanta-bg", mouseControls: true, touchControls: true, gyroControls: false, minHeight: 200.00, minWidth: 200.00, backgroundColor: 0x0, skyColor: 0x5ca6ca, cloudColor: 0x334d80, cloudShadowColor: 0x182030, sunColor: 0xffffff, sunGlareColor: 0xffffff, sunPosition: {x: 0, y: 0, z: 0}, speed: 1.50 }); });
