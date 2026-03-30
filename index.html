@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="referrer" content="no-referrer">
+    
+    <meta name="description" content="Instagram gizli profil fotoğrafı büyütme, anonim hikaye (story) izleme, Reels ve video indirme araçları. Şifresiz, ücretsiz ve %100 güvenli Instagram araçları.">
+    <meta name="keywords" content="instagram gizli profil bakma, instagram pp büyütme, instagram reels indir, instagram hikaye izle, anonim story izleme, instagram video indir, instagram öne çıkanlar indir, şifresiz instagram araçları, story saver">
+    <meta name="author" content="Instagram Araçları">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Instagram Araçları | Anonim Görüntüleyici ve İndirici">
+    <meta property="og:description" content="Instagram profil fotoğraflarını HD büyüt, anonim hikaye izle ve Reels videolarını tek tıkla cihazına indir. Şifresiz ve %100 Ücretsiz.">
+    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/2048px-Instagram_logo_2016.svg.png">
+
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0e0e0e">
     <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/192px-Instagram_logo_2016.svg.png">
@@ -12,8 +23,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- İŞTE SİHİR BURADA: Dosya adı normal, ama v=6.0 ile hafıza patlatıyoruz! -->
-    <link rel="stylesheet" href="style.css?v=6.0">
+    <link rel="stylesheet" href="style.css?v=7.0">
 </head>
 <body>
     
@@ -67,7 +77,11 @@
                 <img id="profileImage" src="" alt="Sonuç" style="display: none;" class="cinematic-media">
                 <video id="resultVideo" controls style="display: none;" class="cinematic-media"></video>
                 <a id="downloadBtn" class="dl-btn-small" style="display: none; justify-content: center; align-items: center; gap: 8px; margin-bottom: 25px; width: 100%; max-width: 250px; border-radius: 12px; font-size: 16px;"><i class="fa-solid fa-download"></i> İndir</a>
+                
                 <div id="galleryContainer" class="gallery" style="display: none;"></div>
+                
+                <!-- YENİ: DAHA FAZLA YÜKLE BUTONU -->
+                <button id="loadMoreBtn" class="load-more-btn" style="display: none;"><i class="fa-solid fa-arrow-rotate-right"></i> Daha Fazla Yükle</button>
             </div>
         </div>
 
@@ -96,7 +110,6 @@
     </div> 
     
     <div id="scrollTopBtn" class="scroll-top-btn"><i class="fa-solid fa-chevron-up"></i></div>
-
     <div id="toastContainer" class="toast-container"></div>
 
     <div id="customContextMenu" class="custom-menu">
@@ -110,12 +123,10 @@
         <div class="modal-counter" id="modalCounter">1 / 1</div>
         <span class="modal-prev" id="modalPrev"><i class="fa-solid fa-chevron-left"></i></span>
         <span class="modal-next" id="modalNext"><i class="fa-solid fa-chevron-right"></i></span>
-        
         <div class="modal-content">
             <img id="modalImage" src="" alt="Büyütülmüş Görsel" style="display: none;">
             <video id="modalVideo" controls autoplay style="display: none;"></video>
         </div>
-        
         <div class="modal-actions">
             <button id="modalCopyBtn" class="modal-action-btn"><i class="fa-solid fa-link"></i></button>
             <a id="modalDownloadBtn" href="" target="_blank" class="modal-action-btn dl-primary"><i class="fa-solid fa-download"></i> <span id="modalDlText">İndir</span></a>
@@ -124,8 +135,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.clouds.min.js"></script>
-    
-    <!-- YİNE BURASI NORMAL İSİM AMA v=6.0 İLE -->
-    <script src="script.js?v=6.0"></script>
+    <script src="script.js?v=7.0"></script>
 </body>
 </html>
