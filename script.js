@@ -512,3 +512,29 @@ window.addEventListener('DOMContentLoaded', () => {
 
     VANTA.CLOUDS({ el: "#vanta-bg", mouseControls: true, touchControls: true, gyroControls: false, minHeight: 200.00, minWidth: 200.00, backgroundColor: 0x0, skyColor: 0x5ca6ca, cloudColor: 0x334d80, cloudShadowColor: 0x182030, sunColor: 0xffffff, sunGlareColor: 0xffffff, sunPosition: {x: 0, y: 0, z: 0}, speed: 1.50 }); 
 });
+
+// --- ZORUNLU YÖNLENDİRME MOTORU (CSS KORUMASINI EZER) ---
+window.addEventListener('DOMContentLoaded', () => {
+    const routeMap = {
+        'tabProfile': '/',
+        'tabPosts': '/gonderiler.html',
+        'tabVideo': '/reels-indir.html',
+        'tabStory': '/hikaye-izle.html',
+        'tabHighlight': '/one-cikanlar.html'
+    };
+
+    for (const [id, url] of Object.entries(routeMap)) {
+        const btn = document.getElementById(id);
+        if (btn) {
+            // CSS'teki tıklama engellerini (pointer-events) zorla kaldırıyoruz
+            btn.style.pointerEvents = 'auto'; 
+            btn.style.cursor = 'pointer';
+            
+            // Tıklamayı dinle ve anında sayfaya fırlat
+            btn.addEventListener('click', function(e) {
+                e.preventDefault(); 
+                window.location.href = url; 
+            });
+        }
+    }
+});
