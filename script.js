@@ -22,8 +22,8 @@ const translations = {
         faq3Q: "Bu araç ücretsiz mi?", faq3A: "Evet, sitemizdeki tüm araçları günlük limitler dahilinde tamamen ücretsiz, şifresiz ve reklamsız olarak kullanabilirsiniz.",
         footerText: "Instagram™ ile herhangi bir bağlantımız yoktur. Sunucularımızda Instagram içeriği barındırılmamaktadır. Tüm hakları kendi sahiplerine aittir. Gizliliğe saygı duyuyoruz — yalnızca herkese açık içerikler görüntülenebilir.",
         btnModalDl: "İndir", menuOpen: "Tam Boyutta Aç", menuCopy: "Bağlantıyı Kopyala", menuDl: "Medyayı İndir", toastCopied: "Panoya kopyalandı!",
-        iosDlToast: "🕵️ Lütfen açılan pencerede 'Görseli Kaydet' veya 'Dosyalara Kaydet' seçeneğine basın.",
-        iosVideoToast: "📹 iOS kısıtlaması: Video yeni sekmede açılacak. Alt menüden 'Paylaş' simgesine dokunup 'Dosyalara Kaydet' diyebilirsiniz.",
+        iosDlToast: "🕵️ Açılan medyaya basılı tutarak 'Fotoğraflara Kaydet' diyebilirsiniz.",
+        iosVideoToast: "📹 iOS Kısıtlaması: Açılan sekmede alt menüden 'Paylaş' ve 'Dosyalara Kaydet' seçeneğini kullanın.",
         inAppBrowserWarn: "⚠️ Bu tarayıcı indirmeyi kısıtlıyor. Lütfen sağ üstten Safari veya Chrome'da açın."
     },
     en: {
@@ -49,8 +49,8 @@ const translations = {
         faq3Q: "Is this tool free?", faq3A: "Yes, you can use all tools on our site completely free, without passwords and ad-free, within daily limits.",
         footerText: "We are not affiliated with Instagram™. We do not host any Instagram content. All rights belong to their respective owners. We respect privacy — only public content is available.",
         btnModalDl: "Download", menuOpen: "Open Full Size", menuCopy: "Copy Link", menuDl: "Download Media", toastCopied: "Copied to clipboard!",
-        iosDlToast: "🕵️ Please select 'Save Image' or 'Save to Files' in the popup window.",
-        iosVideoToast: "📹 iOS restriction: Video will open in a new tab. Tap the Share icon and select 'Save to Files'.",
+        iosDlToast: "🕵️ Long-press the media in the new tab to 'Save Image'.",
+        iosVideoToast: "📹 iOS Restriction: Use the Share icon below to 'Save to Files'.",
         inAppBrowserWarn: "⚠️ This browser restricts downloads. Please open in Safari or Chrome from the menu."
     },
     de: {
@@ -76,8 +76,8 @@ const translations = {
         faq3Q: "Ist es kostenlos?", faq3A: "Ja, komplett kostenlos.",
         footerText: "Wir sind nicht mit Instagram™ verbunden. Alle Rechte liegen bei den jeweiligen Eigentümern.",
         btnModalDl: "Herunterladen", menuOpen: "In voller Größe öffnen", menuCopy: "Link kopieren", menuDl: "Medien herunterladen", toastCopied: "In die Zwischenablage kopiert!",
-        iosDlToast: "🕵️ Bitte wählen Sie im Popup 'Bild sichern' oder 'In Dateien sichern'.",
-        iosVideoToast: "📹 iOS-Einschränkung: Video öffnet in neuem Tab. Tippen Sie auf Teilen und 'In Dateien sichern'.",
+        iosDlToast: "🕵️ Halten Sie das Bild gedrückt, um es zu speichern.",
+        iosVideoToast: "📹 iOS-Einschränkung: Nutzen Sie das Teilen-Symbol, um in Dateien zu sichern.",
         inAppBrowserWarn: "⚠️ Bitte in Safari oder Chrome öffnen."
     },
     es: {
@@ -103,8 +103,8 @@ const translations = {
         faq3Q: "¿Es gratis?", faq3A: "Sí, totalmente gratis.",
         footerText: "No estamos afiliados a Instagram™.",
         btnModalDl: "Descargar", menuOpen: "Abrir tamaño completo", menuCopy: "Copiar enlace", menuDl: "Descargar", toastCopied: "¡Copiado!",
-        iosDlToast: "🕵️ Selecciona 'Guardar imagen' o 'Guardar en Archivos' en la ventana.",
-        iosVideoToast: "📹 Restricción de iOS: El video se abrirá en otra pestaña. Toca Compartir y 'Guardar en Archivos'.",
+        iosDlToast: "🕵️ Mantén presionada la imagen para guardarla.",
+        iosVideoToast: "📹 Restricción iOS: Usa el ícono de compartir abajo para guardar en Archivos.",
         inAppBrowserWarn: "⚠️ Por favor abre en Safari o Chrome."
     },
     fr: {
@@ -130,8 +130,8 @@ const translations = {
         faq3Q: "Est-ce gratuit ?", faq3A: "Oui, totalement gratuit.",
         footerText: "Nous ne sommes pas affiliés à Instagram™.",
         btnModalDl: "Télécharger", menuOpen: "Ouvrir en taille réelle", menuCopy: "Copier le lien", menuDl: "Télécharger le média", toastCopied: "Copié !",
-        iosDlToast: "🕵️ Sélectionnez 'Enregistrer l'image' ou 'Enregistrer dans Fichiers'.",
-        iosVideoToast: "📹 Restriction iOS: La vidéo s'ouvrira dans un onglet. Appuyez sur Partager puis 'Enregistrer dans Fichiers'.",
+        iosDlToast: "🕵️ Appuyez longuement sur l'image pour l'enregistrer.",
+        iosVideoToast: "📹 Restriction iOS: Utilisez l'icône de partage pour enregistrer dans Fichiers.",
         inAppBrowserWarn: "⚠️ Veuillez ouvrir dans Safari ou Chrome."
     },
     ru: {
@@ -157,8 +157,8 @@ const translations = {
         faq3Q: "Это бесплатно?", faq3A: "Да, абсолютно бесплатно.",
         footerText: "Мы не связаны с Instagram™.",
         btnModalDl: "Скачать", menuOpen: "Открыть в полном размере", menuCopy: "Скопировать ссылку", menuDl: "Скачать медиа", toastCopied: "Скопировано!",
-        iosDlToast: "🕵️ Выберите 'Сохранить изображение' или 'Сохранить в Файлы'.",
-        iosVideoToast: "📹 Ограничение iOS: Видео откроется в новой вкладке. Нажмите Поделиться и 'Сохранить в Файлы'.",
+        iosDlToast: "🕵️ Нажмите и удерживайте, чтобы сохранить.",
+        iosVideoToast: "📹 Ограничение iOS: Используйте значок «Поделиться», чтобы сохранить в файлы.",
         inAppBrowserWarn: "⚠️ Пожалуйста, откройте в Safari или Chrome."
     }
 };
@@ -215,7 +215,7 @@ elements.clearInputBtn.addEventListener('click', () => { elements.mainInput.valu
 window.addEventListener('scroll', () => { if (window.scrollY > 300) elements.scrollTopBtn.classList.add('visible'); else elements.scrollTopBtn.classList.remove('visible'); });
 elements.scrollTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-
+// 🕵️‍♂️ İŞTE BURASI: APPLE'I BYPASS EDEN YENİ İNDİRME MOTORU
 window.forceDownload = async function(event, btn, url, isVideo) {
     if(event) event.preventDefault();
     triggerVibration(); 
@@ -229,6 +229,7 @@ window.forceDownload = async function(event, btn, url, isVideo) {
         if(!isIOS || isVideo) return false; 
     }
 
+    // --- ANDROID ve BİLGİSAYAR İÇİN STANDART DİREKT İNDİRME ---
     if (!isIOS) {
         const a = document.createElement('a');
         a.href = url + (url.includes('?') ? '&dl=1' : '?dl=1');
@@ -240,64 +241,29 @@ window.forceDownload = async function(event, btn, url, isVideo) {
         return false;
     }
 
-    // 🕵️‍♂️ YENİ: iOS'TA VİDEOLARI ASLA PROXY'YE SOKMA, DİREKT YENİ SEKMEYE YÖNLENDİR Kİ ÇÖKMESİN
-    if (isIOS && isVideo) {
+    // --- KURŞUN GEÇİRMEZ iOS ÇÖZÜMÜ ---
+    // Apple'ın popup engelleyicisi setTimeout veya fetch işlemlerine müsaade etmez. 
+    // Tıklandığı milisaniye içinde direkt sekme açtırıyoruz.
+    
+    if (isVideo) {
         showToast('iosVideoToast', 'info', false);
-        const originalText = btn.innerHTML;
-        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Hazırlanıyor...`;
-        btn.style.backgroundColor = "#f59e0b";
-        btn.style.pointerEvents = "none";
-        
-        setTimeout(() => {
-            window.open(url, '_blank');
-            btn.innerHTML = originalText; 
-            btn.style.backgroundColor = ""; 
-            btn.style.pointerEvents = "auto";
-        }, 3800);
-        return false;
+    } else {
+        showToast('iosDlToast', 'info', false);
     }
 
-    // SADECE GÖRSELLER İÇİN iOS PAYLAŞIM PENCERESİ AÇILIR
-    showToast('iosDlToast', 'info');
+    // Bekleme Yok, Animasyon Yok. Direkt Açılış.
+    window.open(url, '_blank');
+
+    // Sadece butonda güzel bir görsel efekt verelim.
     const originalText = btn.innerHTML;
-    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> İndiriliyor...`;
-    btn.style.backgroundColor = "#f59e0b"; 
-    btn.style.pointerEvents = "none";
+    btn.innerHTML = `<i class="fa-solid fa-check"></i> Açıldı`;
+    btn.style.backgroundColor = "#10b981"; 
+    
+    setTimeout(() => { 
+        btn.innerHTML = originalText; 
+        btn.style.backgroundColor = ""; 
+    }, 2500);
 
-    try {
-        const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
-        const response = await fetch(proxyUrl, { signal: controller.signal });
-        clearTimeout(timeoutId);
-
-        if (!response.ok) throw new Error('CORS Hatası');
-        
-        const arrayBuffer = await response.arrayBuffer();
-        const blob = new Blob([arrayBuffer], { type: 'application/octet-stream' });
-        const blobUrl = window.URL.createObjectURL(blob);
-        
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = blobUrl;
-        a.download = `ig_medya_${Date.now()}.jpg`;
-        
-        document.body.appendChild(a);
-        a.click(); 
-        
-        setTimeout(() => {
-             window.URL.revokeObjectURL(blobUrl);
-             document.body.removeChild(a);
-        }, 100);
-
-        btn.innerHTML = `<i class="fa-solid fa-check"></i> Başarılı!`;
-        btn.style.backgroundColor = "#10b981"; 
-        setTimeout(() => { btn.innerHTML = originalText; btn.style.backgroundColor = ""; btn.style.pointerEvents = "auto"; }, 3000);
-
-    } catch (error) {
-        btn.innerHTML = originalText; btn.style.backgroundColor = ""; btn.style.pointerEvents = "auto";
-        window.open(url, '_blank');
-    }
     return false;
 };
 
