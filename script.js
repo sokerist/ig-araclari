@@ -499,38 +499,10 @@ autoDetect();
 
 // YENİ EKLENEN KISIM: Yüklendiğinde butonların stilini ayarlayan ve ikonu seçen motor
 window.addEventListener('DOMContentLoaded', () => { 
-    // YENİ EKLENEN KISIM: Yüklendiğinde butonların stilini ayarlayan ve ikonu seçen motor
-window.addEventListener('DOMContentLoaded', () => { 
     // Sekmeleri Ayarla
     elements.tabs.forEach(btn => btn.classList.remove('active'));
     const activeTabElement = document.getElementById('tab' + currentMode.charAt(0).toUpperCase() + currentMode.slice(1));
     if(activeTabElement) activeTabElement.classList.add('active');
-
-    // İkonu Ayarla
-    const iconMap = { 'profile': 'fa-user-circle', 'posts': 'fa-border-all', 'video': 'fa-play', 'story': 'fa-clock-rotate-left', 'highlight': 'fa-star' };
-    if(elements.inputIcon) elements.inputIcon.innerHTML = `<i class="fa-solid ${iconMap[currentMode]}"></i>`;
-    
-    updateModeText();
-
-    // 🚀 BÜYÜK SEO GÜNCELLEMESİ: Butonlara Çoklu Sayfa Geçiş Özelliği Kazandırma (ROUTER)
-    elements.tabs.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault(); 
-            const routeMap = {
-                'tabProfile': '/',
-                'tabPosts': '/gonderiler.html',
-                'tabVideo': '/reels-indir.html',
-                'tabStory': '/hikaye-izle.html',
-                'tabHighlight': '/one-cikanlar.html'
-            };
-            if(routeMap[btn.id]) {
-                window.location.href = routeMap[btn.id]; // İlgili sayfaya anında ışınla
-            }
-        });
-    });
-
-    VANTA.CLOUDS({ el: "#vanta-bg", mouseControls: true, touchControls: true, gyroControls: false, minHeight: 200.00, minWidth: 200.00, backgroundColor: 0x0, skyColor: 0x5ca6ca, cloudColor: 0x334d80, cloudShadowColor: 0x182030, sunColor: 0xffffff, sunGlareColor: 0xffffff, sunPosition: {x: 0, y: 0, z: 0}, speed: 1.50 }); 
-});
 
     // İkonu Ayarla
     const iconMap = { 'profile': 'fa-user-circle', 'posts': 'fa-border-all', 'video': 'fa-play', 'story': 'fa-clock-rotate-left', 'highlight': 'fa-star' };
