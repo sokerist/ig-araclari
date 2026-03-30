@@ -67,35 +67,34 @@ const elements = {
     downloadBtn: document.getElementById('downloadBtn')
 };
 
-// --- GLOBAL APPLE/WHATSAPP ENGELLEYİCİSİ (KESİN ÇÖZÜM) ---
+// --- NATIVE APPLE POPUP İÇİN İKİ AŞAMALI İNDİRME MOTORU (BLOB MAGIC) ---
 window.forceDownload = async function(event, btn, url, isVideo) {
-    if(event) event.preventDefault(); // Safari'nin linki açmasını ŞAK diye durdurur!
+    if(event) event.preventDefault();
 
-    const inAppBrowser = /FBAN|FBAV|Instagram|WhatsApp|Line|Snapchat/i.test(navigator.userAgent);
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-    if (inAppBrowser) {
-        showToast('⚠️ WhatsApp tarayıcısındasınız. Videoyu kaydetmek için sağ alt köşeden "Safari\'de Aç" deyin.', 'error');
+    // 1. Aşama: Eğer Blob zaten oluşturulduysa, Native Safari İndirme Menüsünü Tetikle!
+    if (btn.hasAttribute('data-blob')) {
+        const blobUrl = btn.getAttribute('data-blob');
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = blobUrl;
+        a.download = `ig_medya_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
+        document.body.appendChild(a);
+        a.click(); // İşte Safari'deki o native "İndir/Görüntüle" menüsünü açacak sihirli vuruş!
+        document.body.removeChild(a);
         return false;
     }
 
-    if (isIOS && isVideo) {
-        if (btn) {
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `<i class="fa-solid fa-hand-pointer"></i> UZUN BAS`;
-            btn.style.backgroundColor = "#f59e0b"; 
-            
-            showToast('Apple Güvenliği: Butona UZUN BASILI TUTUN ve "Bağlantılı Dosyayı İndir" seçeneğine tıklayın.', 'info');
-            
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.style.backgroundColor = "";
-            }, 6000);
-        }
-        return false; // Safarinin videoya atlamasını %100 engeller.
+    // 2. Aşama: İlk Tıklamada videoyu arka planda çek (Loader Ekranı)
+    const inAppBrowser = /FBAN|FBAV|Instagram|WhatsApp|Line|Snapchat/i.test(navigator.userAgent);
+    if (inAppBrowser) {
+        showToast('WhatsApp/IG tarayıcısında indirme sorunları yaşanabilir. Sağ alt/üstten "Safari\'de Aç" demeniz önerilir.', 'info');
     }
 
-    showToast('İndirme hazırlanıyor, lütfen bekleyin...', 'info');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Hazırlanıyor...`;
+    btn.style.backgroundColor = "#f59e0b"; // Turuncu
+    btn.style.pointerEvents = "none"; // Çift tıklamayı engelle
+
     try {
         const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
         const response = await fetch(proxyUrl);
@@ -103,18 +102,19 @@ window.forceDownload = async function(event, btn, url, isVideo) {
         
         const blob = await response.blob();
         const blobUrl = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = blobUrl;
-        const ext = isVideo ? 'mp4' : 'jpg';
-        a.download = `ig_download_${new Date().getTime()}.${ext}`;
         
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(blobUrl);
-        document.body.removeChild(a);
-        showToast('İndirme başarılı!', 'success');
+        // 3. Aşama: Butonu Yeşil yap ve İkinci Tıklamaya Hazırla
+        btn.innerHTML = `<i class="fa-solid fa-download"></i> Tıkla ve İndir`;
+        btn.style.backgroundColor = "#10b981"; // Yeşil
+        btn.style.pointerEvents = "auto";
+        btn.setAttribute('data-blob', blobUrl);
+        
+        showToast('Dosya hazır! Menüyü açmak için butona tekrar basın.', 'success');
     } catch (error) {
+        // Dosya çok büyükse tünel tıkanır, eski yönteme (Yeni Sekmeye) düşer
+        btn.innerHTML = originalText;
+        btn.style.backgroundColor = "";
+        btn.style.pointerEvents = "auto";
         window.open(url, '_blank');
     }
     return false;
@@ -284,7 +284,6 @@ elements.searchBtn.addEventListener('click', async function() {
 
                 const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
                 
-                // RETURN KULLANILARAK BUTON KESİN OLARAK KİLİTLENDİ
                 div.innerHTML = `
                     ${badgeHtml} ${mediaHtml}
                     <div style="padding: 12px; font-size: 14px; background: #0e0e0e; color: #ddd; text-align:left; pointer-events:none;">
@@ -303,7 +302,6 @@ elements.searchBtn.addEventListener('click', async function() {
                 const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
                 let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
                 
-                // RETURN KULLANILARAK BUTON KESİN OLARAK KİLİTLENDİ
                 div.innerHTML = `
                     ${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
                     <a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
@@ -334,7 +332,6 @@ async function loadHighlightStories(highlightId) {
             const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
             let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
             
-            // RETURN KULLANILARAK BUTON KESİN OLARAK KİLİTLENDİ
             div.innerHTML = `
                 ${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
                 <a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
