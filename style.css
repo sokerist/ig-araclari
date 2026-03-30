@@ -67,11 +67,11 @@ input::placeholder { color: #4a4a4a; }
 .gallery-item video { object-fit: cover; } 
 .gallery-item:hover img, .gallery-item:hover video { transform: scale(1.1); }
 
-/* --- İŞTE SİHRİN GERÇEKLEŞTİĞİ YER --- */
-/* Resim büyüdüğünde yazıların yutulmasını engelleyen ve onları kalkan gibi öne çıkaran komut: */
+/* --- İŞTE O SİYAH BARLARI YOK EDEN SİHİRLİ ESNEME KODU (flex: 1) --- */
 .gallery-item > div:not(.carousel-badge) {
     position: relative;
     z-index: 20;
+    flex: 1; /* Alt kısımdaki boşlukları tamamen doldurur */
 }
 
 .dl-btn-small { display: block; background-color: #10b981; color: white; text-align: center; padding: 12px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.3s; margin-top: auto; position: relative; z-index: 20; cursor: pointer; border: none; }
