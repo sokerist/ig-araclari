@@ -123,8 +123,6 @@ input::placeholder { color: #4a4a4a; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes cascadeFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes skeletonLoading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-/* 🕵️‍♂️ SİHİR BURADA: X EKSENİNDE KAYDIRMA İPTAL EDİLDİ SADECE AŞAĞIDAN YUKARI */
 @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 @keyframes slideInBottom { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } } 
 @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
@@ -161,7 +159,8 @@ input::placeholder { color: #4a4a4a; }
     #descText { font-size: 14px; margin-bottom: 25px; }
     
     .tabs { gap: 8px; padding-bottom: 15px; margin-bottom: 25px; }
-    .tab-btn { padding: 10px 14px; font-size: 12px; border-radius: 10px; flex: 1; min-width: 45%; text-align: center; display: flex; justify-content: center; }
+    /* 🕵️‍♂️ YENİ: MOBİLDE TAB BUTONLARININ İÇİNİ DİKEY/YATAY KUSURSUZ ORTALA */
+    .tab-btn { padding: 10px 14px; font-size: 12px; border-radius: 10px; flex: 1; min-width: 45%; text-align: center; display: flex; justify-content: center; align-items: center; gap: 5px;}
     
     .search-box { flex-direction: column; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 18px; gap: 15px; margin-bottom: 30px;}
     .input-wrapper { width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
@@ -176,8 +175,8 @@ input::placeholder { color: #4a4a4a; }
     
     .modal-actions { bottom: 30px; width: 100%; justify-content: center; gap: 15px; }
     
-    /* 🕵️‍♂️ SİHİR BURADA: EKRANI %100 KAPLAYIP ÇOCUKLARI ORTALAYAN KUSURSUZ YAPI */
-    .toast-container { left: 0 !important; right: 0 !important; transform: none !important; bottom: 20px !important; width: 100% !important; padding: 0 20px !important; align-items: center !important; }
+    /* 🕵️‍♂️ SİHİR BURADA: KUSURSUZ ORTALAYAN KAPI VE ÇOCUKLARI (TOASTS) ORTALAYAN YAPI */
+    .toast-container { left: 0 !important; right: 0 !important; transform: none !important; bottom: 20px !important; width: 100% !important; padding: 0 20px !important; align-items: center !important; z-index: 9999999 !important;}
     .toast { width: 100% !important; justify-content: center !important; animation: slideInBottom 0.3s ease forwards, fadeOut 0.3s ease 4.7s forwards !important; }
     
     .scroll-top-btn { bottom: 20px; left: 20px; width: 45px; height: 45px; font-size: 16px; }

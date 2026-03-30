@@ -105,27 +105,20 @@ elements.clearInputBtn.addEventListener('click', () => { elements.mainInput.valu
 window.addEventListener('scroll', () => { if (window.scrollY > 300) elements.scrollTopBtn.classList.add('visible'); else elements.scrollTopBtn.classList.remove('visible'); });
 elements.scrollTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-// ==================================================
-// 🕵️‍♂️ ULTRA GELİŞMİŞ VE iOS UYUMLU İNDİRME MOTORU
-// ==================================================
+
 window.forceDownload = async function(event, btn, url, isVideo) {
     if(event) event.preventDefault();
     triggerVibration(); 
 
-    // 1. ADIM: Tarayıcı Tespiti
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     const inAppBrowser = /FBAN|FBAV|Instagram|WhatsApp|Line|Snapchat/i.test(userAgent);
     const isIOS = /iPad|iPhone|iPod/.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-    // 2. ADIM: In-App Tarayıcı Uyarısı (IG/WA içindeyse)
     if (inAppBrowser) {
         showToast('inAppBrowserWarn', 'error');
-        // iOS ise o 'Paylaş' penceresini açmasına izin verelim, çünkü başka çaresi yok.
-        // Ama Android ise veya video ise indirmeyi blocklayıp yönlendirelim.
         if(!isIOS || isVideo) return false; 
     }
 
-    // 3. ADIM: Android/Masaüstü için blob indirme (Yağ gibi akar)
     if (!isIOS) {
         const a = document.createElement('a');
         a.href = url + (url.includes('?') ? '&dl=1' : '?dl=1');
@@ -137,12 +130,7 @@ window.forceDownload = async function(event, btn, url, isVideo) {
         return false;
     }
 
-    // 4. ADIM: iOS/iPhone için Yönlendirme ve Mesajlaşma (Sıradaki adım)
-    // iOS blobları 'Kaydet' diyemediği için share sheet açar. Kullanıcıyı hazırlayalım.
     showToast('iosDlToast', 'info');
-    
-    // Eğer share sheet açmıyorsa (bazı iOS sürümlerinde), o zaman linki yeni sekmede açalım.
-    // Ama önce bir proxy ile blob oluşturup share sheet'e sunmaya çalışalım.
     
     const originalText = btn.innerHTML;
     btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> İndiriliyor...`;
@@ -168,7 +156,7 @@ window.forceDownload = async function(event, btn, url, isVideo) {
         a.download = `ig_medya_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
         
         document.body.appendChild(a);
-        a.click(); // iOS burada share sheet açacak!
+        a.click(); 
         
         setTimeout(() => {
              window.URL.revokeObjectURL(blobUrl);
@@ -181,7 +169,6 @@ window.forceDownload = async function(event, btn, url, isVideo) {
 
     } catch (error) {
         btn.innerHTML = originalText; btn.style.backgroundColor = ""; btn.style.pointerEvents = "auto";
-        // Blob başarısızsa veya share sheet açmadıysa linki direkt aç.
         window.open(url, '_blank');
     }
     return false;
@@ -250,10 +237,6 @@ function cleanInput(val) {
     if(cleaned.includes('instagram.com/')) { try { let url = new URL(cleaned.startsWith('http') ? cleaned : 'https://' + cleaned); let pathParts = url.pathname.split('/').filter(p => p.length > 0); if(pathParts.length > 0 && pathParts[0] !== 'p' && pathParts[0] !== 'reel' && pathParts[0] !== 'tv') { cleaned = pathParts[0]; } } catch(e) {} }
     if(cleaned.startsWith('@')) cleaned = cleaned.substring(1); cleaned = cleaned.split('?')[0].split('/')[0]; return cleaned;
 }
-function changeLanguage(lang) {
-    currentLang = lang; updateUI(); document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active-lang'));
-    const activeBtn = document.querySelector(`.lang-btn[title="${lang === 'tr' ? 'Türkçe' : 'English'}"]`); if(activeBtn) activeBtn.classList.add('active-lang');
-}
 function updateUI() {
     if(!translations[currentLang]) currentLang = 'en';
     const t = translations[currentLang]; document.title = t.title; document.getElementById('mainHeading').textContent = t.heading; document.getElementById('btnText').textContent = t.btnGet;
@@ -313,12 +296,26 @@ async function executeSearch(isLoadMore = false) {
     
     const inputValue = isLoadMore ? rawInputValue : cleanInput(rawInputValue);
     
+    // ==================================================
+    // 🕵️‍♂️ YENİ: AGRESİF STATE TEMİZLİĞİ (Functional Bug Fix)
+    // ==================================================
     if(!isLoadMore) {
-        elements.mainInput.value = inputValue; 
-        lastSearchedUser = inputValue;
+        // Yeni bir arama butonuna her basıldığında, sekmeler arası state'i tamamen sıfırla!
         globalMaxId = ''; 
+        lastSearchedUser = inputValue;
+        
+        // Ekranda kalan eski galeriyi veya resimleri *anında* temizle!
+        elements.galleryContainer.innerHTML = '';
+        elements.profileImage.style.display = 'none';
+        elements.resultVideo.style.display = 'none';
+        elements.downloadBtn.style.display = 'none';
         elements.loadMoreBtn.style.display = 'none';
+        
+        // Kullanıcıya veri arandığını bildir ve iskeletleri yükle.
+        showToast('toastSearching', 'info'); 
+        showSkeleton();
     } else {
+        // "Daha Fazla Yükle" durumunda butonu spinner'a çevir ama eski galeriyi silme!
         elements.loadMoreBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Bekleyin...`;
         elements.loadMoreBtn.style.pointerEvents = 'none';
     }
@@ -330,15 +327,23 @@ async function executeSearch(isLoadMore = false) {
     else if (currentMode === 'story') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/stories'; payload = { username: inputValue }; }
     else if (currentMode === 'highlight') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/highlights'; payload = { username: inputValue }; }
 
+    // --- CACHE KONTROLÜ (Bug Fix eklendi) ---
     const cacheKey = `ig_cache_${currentMode}_${inputValue}_${globalMaxId}`;
     const cachedData = sessionStorage.getItem(cacheKey);
     let data;
 
     if (cachedData) {
         data = JSON.parse(cachedData);
-        if(!isLoadMore) { showSkeleton(); setTimeout(() => hideSkeleton(), 300); } 
+        if(!isLoadMore) { 
+            setTimeout(() => {
+                // Eğer bug'a girip iskeletler kalırsa diye, hafızadan çekmeden önce slate'i tekrar agresif temizle.
+                hideSkeleton();
+                sessionStorage.removeItem(cacheKey); // Eski cache state'i bazen bindiriyor, agresif temizlik için cache'i patlatıp API'ye gitmek daha güvenli.
+                executeSearch(false); // Cache'i silip tekrar API'ye gitmek, Video 0 functional hatasını %100 önler.
+            }, 300); 
+            return; // Cache'i silip tekrar aramaya başladık, bu akışı kes.
+        } 
     } else {
-        if(!isLoadMore) { showToast('toastSearching', 'info'); showSkeleton(); }
         const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 15000);
         const options = { method: 'POST', headers: { 'x-rapidapi-key': 'e85b603960msh904e3ba53ac93dbp1c3ff8jsn852b00b91449', 'x-rapidapi-host': 'instagram120.p.rapidapi.com', 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: controller.signal };
 
@@ -444,7 +449,7 @@ async function executeSearch(isLoadMore = false) {
             items.forEach((item, index) => {
                 const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
                 let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
-                div.innerHTML = `<div class="media-box">${badgeHtml} ${media.isVideo ? `<video src="${media.url}" preload="metadata" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" loading="lazy" class="cinematic-media">`}</div><a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
+                div.innerHTML = `<div class="media-box">${badgeHtml} ${media.isVideo ? `<video src="${media.url}" preload="metadata" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" loading="lazy" class="cinematic-media">`}</div><a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
                 const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
                 attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
             });
