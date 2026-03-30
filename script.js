@@ -23,6 +23,7 @@ const translations = {
         footerText: "Instagram™ ile herhangi bir bağlantımız yoktur. Sunucularımızda Instagram içeriği barındırılmamaktadır. Tüm hakları kendi sahiplerine aittir. Gizliliğe saygı duyuyoruz — yalnızca herkese açık içerikler görüntülenebilir.",
         btnModalDl: "İndir", menuOpen: "Tam Boyutta Aç", menuCopy: "Bağlantıyı Kopyala", menuDl: "Medyayı İndir", toastCopied: "Panoya kopyalandı!",
         iosDlToast: "🕵️ Lütfen açılan pencerede 'Görseli Kaydet' veya 'Dosyalara Kaydet' seçeneğine basın.",
+        iosVideoToast: "📹 iOS kısıtlaması: Video yeni sekmede açılacak. Alt menüden 'Paylaş' simgesine dokunup 'Dosyalara Kaydet' diyebilirsiniz.",
         inAppBrowserWarn: "⚠️ Bu tarayıcı indirmeyi kısıtlıyor. Lütfen sağ üstten Safari veya Chrome'da açın."
     },
     en: {
@@ -49,7 +50,116 @@ const translations = {
         footerText: "We are not affiliated with Instagram™. We do not host any Instagram content. All rights belong to their respective owners. We respect privacy — only public content is available.",
         btnModalDl: "Download", menuOpen: "Open Full Size", menuCopy: "Copy Link", menuDl: "Download Media", toastCopied: "Copied to clipboard!",
         iosDlToast: "🕵️ Please select 'Save Image' or 'Save to Files' in the popup window.",
+        iosVideoToast: "📹 iOS restriction: Video will open in a new tab. Tap the Share icon and select 'Save to Files'.",
         inAppBrowserWarn: "⚠️ This browser restricts downloads. Please open in Safari or Chrome from the menu."
+    },
+    de: {
+        title: "Instagram Tools | Anonymer Betrachter", heading: "Instagram Tools",
+        descProfile: "Benutzername eingeben, um das HD-Profilbild herunterzuladen.",
+        descPosts: "Benutzername eingeben, um alle Beiträge anonym zu betrachten.",
+        descVideo: "Instagram Reels oder Video-Link einfügen und herunterladen.",
+        descStory: "Benutzername eingeben, um aktive Storys zu sehen.",
+        descHighlight: "Benutzername eingeben, um alle Highlights zu sehen.",
+        tabProfile: "PROFILBILD", tabPosts: "BEITRÄGE", tabVideo: "REELS / VIDEO", tabStory: "STORY", tabHighlight: "HIGHLIGHTS",
+        placeholderUser: "benutzername", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Suchen", btnDownload: "Herunterladen", btnLoadMore: "Mehr laden",
+        errEmpty: "Bitte Benutzernamen oder Link eingeben.",
+        errNotFound: "Nichts gefunden! (Konto könnte privat sein).",
+        errStory: "Keine Storys gefunden oder Konto ist privat.",
+        errHighlight: "Keine Highlights gefunden.",
+        errVideo: "Video nicht gefunden.",
+        errSystem: "Systemfehler. Bitte versuchen Sie es später erneut.",
+        toastSearching: "Daten werden gesucht...",
+        faqHeading: "Häufig gestellte Fragen",
+        faq1Q: "Wird die Person es merken?", faq1A: "Nein, 100% anonym.",
+        faq2Q: "Kann ich private Profile sehen?", faq2A: "Nur das Profilbild. Für Beiträge muss das Konto öffentlich sein.",
+        faq3Q: "Ist es kostenlos?", faq3A: "Ja, komplett kostenlos.",
+        footerText: "Wir sind nicht mit Instagram™ verbunden. Alle Rechte liegen bei den jeweiligen Eigentümern.",
+        btnModalDl: "Herunterladen", menuOpen: "In voller Größe öffnen", menuCopy: "Link kopieren", menuDl: "Medien herunterladen", toastCopied: "In die Zwischenablage kopiert!",
+        iosDlToast: "🕵️ Bitte wählen Sie im Popup 'Bild sichern' oder 'In Dateien sichern'.",
+        iosVideoToast: "📹 iOS-Einschränkung: Video öffnet in neuem Tab. Tippen Sie auf Teilen und 'In Dateien sichern'.",
+        inAppBrowserWarn: "⚠️ Bitte in Safari oder Chrome öffnen."
+    },
+    es: {
+        title: "Herramientas Instagram | Visor Anónimo", heading: "Herramientas Instagram",
+        descProfile: "Ingresa el usuario para ver la foto de perfil en HD.",
+        descPosts: "Ingresa el usuario para ver todas las publicaciones de forma anónima.",
+        descVideo: "Pega el enlace de Reels o Video para descargar.",
+        descStory: "Ingresa el usuario para ver las historias activas.",
+        descHighlight: "Ingresa el usuario para listar los álbumes destacados.",
+        tabProfile: "FOTO DE PERFIL", tabPosts: "PUBLICACIONES", tabVideo: "REELS / VIDEO", tabStory: "HISTORIA", tabHighlight: "DESTACADOS",
+        placeholderUser: "usuario", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Buscar", btnDownload: "Descargar", btnLoadMore: "Cargar más",
+        errEmpty: "Por favor ingresa un usuario o enlace.",
+        errNotFound: "¡No encontrado! (La cuenta podría ser privada).",
+        errStory: "No se encontraron historias o la cuenta es privada.",
+        errHighlight: "No se encontraron destacados.",
+        errVideo: "Video no encontrado.",
+        errSystem: "Error del sistema. Inténtalo de nuevo.",
+        toastSearching: "Buscando datos, por favor espera...",
+        faqHeading: "Preguntas Frecuentes",
+        faq1Q: "¿La otra persona lo sabrá?", faq1A: "No, es 100% anónimo.",
+        faq2Q: "¿Puedo ver perfiles privados?", faq2A: "Solo la foto de perfil. Para publicaciones debe ser público.",
+        faq3Q: "¿Es gratis?", faq3A: "Sí, totalmente gratis.",
+        footerText: "No estamos afiliados a Instagram™.",
+        btnModalDl: "Descargar", menuOpen: "Abrir tamaño completo", menuCopy: "Copiar enlace", menuDl: "Descargar", toastCopied: "¡Copiado!",
+        iosDlToast: "🕵️ Selecciona 'Guardar imagen' o 'Guardar en Archivos' en la ventana.",
+        iosVideoToast: "📹 Restricción de iOS: El video se abrirá en otra pestaña. Toca Compartir y 'Guardar en Archivos'.",
+        inAppBrowserWarn: "⚠️ Por favor abre en Safari o Chrome."
+    },
+    fr: {
+        title: "Outils Instagram | Visionneuse Anonyme", heading: "Outils Instagram",
+        descProfile: "Entrez le nom d'utilisateur pour voir la photo de profil en HD.",
+        descPosts: "Entrez le nom d'utilisateur pour voir les publications anonymement.",
+        descVideo: "Collez le lien Reels ou Vidéo pour télécharger.",
+        descStory: "Entrez le nom d'utilisateur pour voir les stories.",
+        descHighlight: "Entrez le nom d'utilisateur pour voir les stories à la une.",
+        tabProfile: "PHOTO DE PROFIL", tabPosts: "PUBLICATIONS", tabVideo: "REELS / VIDÉO", tabStory: "STORY", tabHighlight: "À LA UNE",
+        placeholderUser: "nom d'utilisateur", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Chercher", btnDownload: "Télécharger", btnLoadMore: "Charger plus",
+        errEmpty: "Veuillez entrer un nom d'utilisateur ou un lien.",
+        errNotFound: "Introuvable ! (Le compte est peut-être privé).",
+        errStory: "Aucune story trouvée ou compte privé.",
+        errHighlight: "Aucune story à la une trouvée.",
+        errVideo: "Vidéo introuvable.",
+        errSystem: "Erreur système. Veuillez réessayer.",
+        toastSearching: "Recherche en cours...",
+        faqHeading: "Questions Fréquentes",
+        faq1Q: "La personne le saura-t-elle ?", faq1A: "Non, c'est 100% anonyme.",
+        faq2Q: "Puis-je voir les profils privés ?", faq2A: "Seulement la photo de profil. Les publications nécessitent un compte public.",
+        faq3Q: "Est-ce gratuit ?", faq3A: "Oui, totalement gratuit.",
+        footerText: "Nous ne sommes pas affiliés à Instagram™.",
+        btnModalDl: "Télécharger", menuOpen: "Ouvrir en taille réelle", menuCopy: "Copier le lien", menuDl: "Télécharger le média", toastCopied: "Copié !",
+        iosDlToast: "🕵️ Sélectionnez 'Enregistrer l'image' ou 'Enregistrer dans Fichiers'.",
+        iosVideoToast: "📹 Restriction iOS: La vidéo s'ouvrira dans un onglet. Appuyez sur Partager puis 'Enregistrer dans Fichiers'.",
+        inAppBrowserWarn: "⚠️ Veuillez ouvrir dans Safari ou Chrome."
+    },
+    ru: {
+        title: "Инструменты Instagram | Анонимный просмотр", heading: "Инструменты Instagram",
+        descProfile: "Введите имя пользователя для просмотра фото профиля в HD.",
+        descPosts: "Введите имя пользователя для анонимного просмотра публикаций.",
+        descVideo: "Вставьте ссылку на Reels или видео для загрузки.",
+        descStory: "Введите имя пользователя для просмотра историй.",
+        descHighlight: "Введите имя пользователя для просмотра актуального.",
+        tabProfile: "ФОТО ПРОФИЛЯ", tabPosts: "ПУБЛИКАЦИИ", tabVideo: "REELS / ВИДЕО", tabStory: "ИСТОРИИ", tabHighlight: "АКТУАЛЬНОЕ",
+        placeholderUser: "имя пользователя", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Искать", btnDownload: "Скачать", btnLoadMore: "Загрузить еще",
+        errEmpty: "Пожалуйста, введите имя пользователя или ссылку.",
+        errNotFound: "Не найдено! (Аккаунт может быть приватным).",
+        errStory: "Истории не найдены или аккаунт приватный.",
+        errHighlight: "Актуальное не найдено.",
+        errVideo: "Видео не найдено.",
+        errSystem: "Системная ошибка. Попробуйте позже.",
+        toastSearching: "Поиск данных...",
+        faqHeading: "Частые вопросы",
+        faq1Q: "Узнает ли об этом пользователь?", faq1A: "Нет, это 100% анонимно.",
+        faq2Q: "Могу ли я смотреть приватные профили?", faq2A: "Только фото профиля. Для публикаций аккаунт должен быть открытым.",
+        faq3Q: "Это бесплатно?", faq3A: "Да, абсолютно бесплатно.",
+        footerText: "Мы не связаны с Instagram™.",
+        btnModalDl: "Скачать", menuOpen: "Открыть в полном размере", menuCopy: "Скопировать ссылку", menuDl: "Скачать медиа", toastCopied: "Скопировано!",
+        iosDlToast: "🕵️ Выберите 'Сохранить изображение' или 'Сохранить в Файлы'.",
+        iosVideoToast: "📹 Ограничение iOS: Видео откроется в новой вкладке. Нажмите Поделиться и 'Сохранить в Файлы'.",
+        inAppBrowserWarn: "⚠️ Пожалуйста, откройте в Safari или Chrome."
     }
 };
 
@@ -130,8 +240,25 @@ window.forceDownload = async function(event, btn, url, isVideo) {
         return false;
     }
 
+    // 🕵️‍♂️ YENİ: iOS'TA VİDEOLARI ASLA PROXY'YE SOKMA, DİREKT YENİ SEKMEYE YÖNLENDİR Kİ ÇÖKMESİN
+    if (isIOS && isVideo) {
+        showToast('iosVideoToast', 'info', false);
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Hazırlanıyor...`;
+        btn.style.backgroundColor = "#f59e0b";
+        btn.style.pointerEvents = "none";
+        
+        setTimeout(() => {
+            window.open(url, '_blank');
+            btn.innerHTML = originalText; 
+            btn.style.backgroundColor = ""; 
+            btn.style.pointerEvents = "auto";
+        }, 3800);
+        return false;
+    }
+
+    // SADECE GÖRSELLER İÇİN iOS PAYLAŞIM PENCERESİ AÇILIR
     showToast('iosDlToast', 'info');
-    
     const originalText = btn.innerHTML;
     btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> İndiriliyor...`;
     btn.style.backgroundColor = "#f59e0b"; 
@@ -153,7 +280,7 @@ window.forceDownload = async function(event, btn, url, isVideo) {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = blobUrl;
-        a.download = `ig_medya_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
+        a.download = `ig_medya_${Date.now()}.jpg`;
         
         document.body.appendChild(a);
         a.click(); 
@@ -296,26 +423,17 @@ async function executeSearch(isLoadMore = false) {
     
     const inputValue = isLoadMore ? rawInputValue : cleanInput(rawInputValue);
     
-    // ==================================================
-    // 🕵️‍♂️ YENİ: AGRESİF STATE TEMİZLİĞİ (Functional Bug Fix)
-    // ==================================================
     if(!isLoadMore) {
-        // Yeni bir arama butonuna her basıldığında, sekmeler arası state'i tamamen sıfırla!
         globalMaxId = ''; 
         lastSearchedUser = inputValue;
-        
-        // Ekranda kalan eski galeriyi veya resimleri *anında* temizle!
         elements.galleryContainer.innerHTML = '';
         elements.profileImage.style.display = 'none';
         elements.resultVideo.style.display = 'none';
         elements.downloadBtn.style.display = 'none';
         elements.loadMoreBtn.style.display = 'none';
-        
-        // Kullanıcıya veri arandığını bildir ve iskeletleri yükle.
         showToast('toastSearching', 'info'); 
         showSkeleton();
     } else {
-        // "Daha Fazla Yükle" durumunda butonu spinner'a çevir ama eski galeriyi silme!
         elements.loadMoreBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Bekleyin...`;
         elements.loadMoreBtn.style.pointerEvents = 'none';
     }
@@ -327,7 +445,6 @@ async function executeSearch(isLoadMore = false) {
     else if (currentMode === 'story') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/stories'; payload = { username: inputValue }; }
     else if (currentMode === 'highlight') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/highlights'; payload = { username: inputValue }; }
 
-    // --- CACHE KONTROLÜ (Bug Fix eklendi) ---
     const cacheKey = `ig_cache_${currentMode}_${inputValue}_${globalMaxId}`;
     const cachedData = sessionStorage.getItem(cacheKey);
     let data;
@@ -336,12 +453,11 @@ async function executeSearch(isLoadMore = false) {
         data = JSON.parse(cachedData);
         if(!isLoadMore) { 
             setTimeout(() => {
-                // Eğer bug'a girip iskeletler kalırsa diye, hafızadan çekmeden önce slate'i tekrar agresif temizle.
                 hideSkeleton();
-                sessionStorage.removeItem(cacheKey); // Eski cache state'i bazen bindiriyor, agresif temizlik için cache'i patlatıp API'ye gitmek daha güvenli.
-                executeSearch(false); // Cache'i silip tekrar API'ye gitmek, Video 0 functional hatasını %100 önler.
+                sessionStorage.removeItem(cacheKey); 
+                executeSearch(false); 
             }, 300); 
-            return; // Cache'i silip tekrar aramaya başladık, bu akışı kes.
+            return; 
         } 
     } else {
         const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 15000);
