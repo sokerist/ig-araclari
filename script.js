@@ -163,7 +163,9 @@ const translations = {
     }
 };
 
-let currentLang = 'tr'; let currentMode = 'profile'; let contextMediaUrl = '';
+let currentLang = 'tr'; 
+let currentMode = window.PAGE_MODE || 'profile'; // YENİ: Hangi sayfada olduğumuzu otomatik anlar
+let contextMediaUrl = '';
 let globalMaxId = ''; 
 let lastSearchedUser = ''; 
 
@@ -215,11 +217,9 @@ elements.clearInputBtn.addEventListener('click', () => { elements.mainInput.valu
 window.addEventListener('scroll', () => { if (window.scrollY > 300) elements.scrollTopBtn.classList.add('visible'); else elements.scrollTopBtn.classList.remove('visible'); });
 elements.scrollTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-// 🕵️‍♂️ İŞTE BURASI: APPLE'I BYPASS EDEN YENİ İNDİRME MOTORU
 window.forceDownload = async function(event, btn, url, isVideo) {
     if(event) event.preventDefault();
     triggerVibration(); 
-
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     const inAppBrowser = /FBAN|FBAV|Instagram|WhatsApp|Line|Snapchat/i.test(userAgent);
     const isIOS = /iPad|iPhone|iPod/.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -228,43 +228,15 @@ window.forceDownload = async function(event, btn, url, isVideo) {
         showToast('inAppBrowserWarn', 'error');
         if(!isIOS || isVideo) return false; 
     }
-
-    // --- ANDROID ve BİLGİSAYAR İÇİN STANDART DİREKT İNDİRME ---
     if (!isIOS) {
-        const a = document.createElement('a');
-        a.href = url + (url.includes('?') ? '&dl=1' : '?dl=1');
-        a.target = '_blank';
-        a.download = `instagram_medya_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        return false;
+        const a = document.createElement('a'); a.href = url + (url.includes('?') ? '&dl=1' : '?dl=1');
+        a.target = '_blank'; a.download = `instagram_medya_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); return false;
     }
-
-    // --- KURŞUN GEÇİRMEZ iOS ÇÖZÜMÜ ---
-    // Apple'ın popup engelleyicisi setTimeout veya fetch işlemlerine müsaade etmez. 
-    // Tıklandığı milisaniye içinde direkt sekme açtırıyoruz.
-    
-    if (isVideo) {
-        showToast('iosVideoToast', 'info', false);
-    } else {
-        showToast('iosDlToast', 'info', false);
-    }
-
-    // Bekleme Yok, Animasyon Yok. Direkt Açılış.
+    if (isVideo) showToast('iosVideoToast', 'info', false); else showToast('iosDlToast', 'info', false);
     window.open(url, '_blank');
-
-    // Sadece butonda güzel bir görsel efekt verelim.
-    const originalText = btn.innerHTML;
-    btn.innerHTML = `<i class="fa-solid fa-check"></i> Açıldı`;
-    btn.style.backgroundColor = "#10b981"; 
-    
-    setTimeout(() => { 
-        btn.innerHTML = originalText; 
-        btn.style.backgroundColor = ""; 
-    }, 2500);
-
-    return false;
+    const originalText = btn.innerHTML; btn.innerHTML = `<i class="fa-solid fa-check"></i> Açıldı`; btn.style.backgroundColor = "#10b981"; 
+    setTimeout(() => { btn.innerHTML = originalText; btn.style.backgroundColor = ""; }, 2500); return false;
 };
 
 elements.searchBtn.addEventListener('mousemove', (e) => {
@@ -358,20 +330,6 @@ function showSkeleton() {
     else { for(let i=0; i<6; i++) { elements.galleryContainer.innerHTML += `<div class="gallery-item"><div class="skeleton-box skeleton-gallery"></div></div>`; } }
 }
 function hideSkeleton() { elements.galleryContainer.innerHTML = ''; }
-function switchTab(mode, iconClass, btnId) {
-    triggerVibration(); 
-    currentMode = mode; elements.tabs.forEach(btn => btn.classList.remove('active')); document.getElementById(btnId).classList.add('active');
-    elements.inputIcon.innerHTML = `<i class="fa-solid ${iconClass}"></i>`; elements.galleryContainer.style.display = 'none'; elements.galleryContainer.innerHTML = '';
-    elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none'; elements.downloadBtn.style.display = 'none'; elements.mainInput.value = ''; elements.clearInputBtn.style.display = 'none'; 
-    globalMaxId = ''; lastSearchedUser = ''; elements.loadMoreBtn.style.display = 'none'; 
-    updateModeText(); loadHistory(); 
-}
-
-document.getElementById('tabProfile').addEventListener('click', () => switchTab('profile', 'fa-user-circle', 'tabProfile'));
-document.getElementById('tabPosts').addEventListener('click', () => switchTab('posts', 'fa-border-all', 'tabPosts'));
-document.getElementById('tabVideo').addEventListener('click', () => switchTab('video', 'fa-play', 'tabVideo'));
-document.getElementById('tabStory').addEventListener('click', () => switchTab('story', 'fa-clock-rotate-left', 'tabStory'));
-document.getElementById('tabHighlight').addEventListener('click', () => switchTab('highlight', 'fa-star', 'tabHighlight'));
 
 function getMediaUrl(item) {
     let url = null; let isVideo = false;
@@ -380,28 +338,19 @@ function getMediaUrl(item) {
 }
 function forceHdUrl(url) { if(!url) return url; return url.replace(/\/s\d+x\d+\//g, '/').replace(/\/c\d+\.\d+\.\d+\.\d+[a-zA-Z]*\//g, '/'); }
 
-
 async function executeSearch(isLoadMore = false) {
     triggerVibration(); 
-    
     let rawInputValue = isLoadMore ? lastSearchedUser : elements.mainInput.value;
     if (!isLoadMore && rawInputValue.trim() === '') { showToast('errEmpty'); return; }
-    
     const inputValue = isLoadMore ? rawInputValue : cleanInput(rawInputValue);
     
     if(!isLoadMore) {
-        globalMaxId = ''; 
-        lastSearchedUser = inputValue;
-        elements.galleryContainer.innerHTML = '';
-        elements.profileImage.style.display = 'none';
-        elements.resultVideo.style.display = 'none';
-        elements.downloadBtn.style.display = 'none';
-        elements.loadMoreBtn.style.display = 'none';
-        showToast('toastSearching', 'info'); 
-        showSkeleton();
+        globalMaxId = ''; lastSearchedUser = inputValue; elements.galleryContainer.innerHTML = '';
+        elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none';
+        elements.downloadBtn.style.display = 'none'; elements.loadMoreBtn.style.display = 'none';
+        showToast('toastSearching', 'info'); showSkeleton();
     } else {
-        elements.loadMoreBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Bekleyin...`;
-        elements.loadMoreBtn.style.pointerEvents = 'none';
+        elements.loadMoreBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Bekleyin...`; elements.loadMoreBtn.style.pointerEvents = 'none';
     }
 
     let apiUrl = ''; let payload = {};
@@ -412,29 +361,15 @@ async function executeSearch(isLoadMore = false) {
     else if (currentMode === 'highlight') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/highlights'; payload = { username: inputValue }; }
 
     const cacheKey = `ig_cache_${currentMode}_${inputValue}_${globalMaxId}`;
-    const cachedData = sessionStorage.getItem(cacheKey);
-    let data;
+    const cachedData = sessionStorage.getItem(cacheKey); let data;
 
     if (cachedData) {
         data = JSON.parse(cachedData);
-        if(!isLoadMore) { 
-            setTimeout(() => {
-                hideSkeleton();
-                sessionStorage.removeItem(cacheKey); 
-                executeSearch(false); 
-            }, 300); 
-            return; 
-        } 
+        if(!isLoadMore) { setTimeout(() => { hideSkeleton(); sessionStorage.removeItem(cacheKey); executeSearch(false); }, 300); return; } 
     } else {
         const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 15000);
         const options = { method: 'POST', headers: { 'x-rapidapi-key': 'e85b603960msh904e3ba53ac93dbp1c3ff8jsn852b00b91449', 'x-rapidapi-host': 'instagram120.p.rapidapi.com', 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: controller.signal };
-
-        try {
-            const response = await fetch(apiUrl, options); clearTimeout(timeoutId); 
-            if(!isLoadMore) hideSkeleton(); 
-            data = await response.json(); 
-            if(data && !data.message) { sessionStorage.setItem(cacheKey, JSON.stringify(data)); }
-        } catch (error) { controller.abort(); }
+        try { const response = await fetch(apiUrl, options); clearTimeout(timeoutId); if(!isLoadMore) hideSkeleton(); data = await response.json(); if(data && !data.message) { sessionStorage.setItem(cacheKey, JSON.stringify(data)); } } catch (error) { controller.abort(); }
     }
 
     try {
@@ -442,13 +377,10 @@ async function executeSearch(isLoadMore = false) {
             let hdImageUrl = null; if (data && data.result && data.result.length > 0 && data.result[0].user) { const userObj = data.result[0].user; hdImageUrl = userObj.hd_profile_pic_url_info?.url || userObj.profile_pic_url_hd || userObj.profile_pic_url; }
             if (hdImageUrl) {
                 const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(hdImageUrl)}`; elements.profileImage.src = proxyUrl; elements.profileImage.style.display = 'block'; attachCinematicLoad(elements.profileImage);
-                if(!cachedData) showToast(translations[currentLang].btnGet + " başarılı!", 'success', true); 
-                saveHistory(inputValue, proxyUrl); 
-                elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.href = proxyUrl; 
-                elements.downloadBtn.onclick = (e) => { return window.forceDownload(e, elements.downloadBtn, proxyUrl, false); };
+                if(!cachedData) showToast(translations[currentLang].btnGet + " başarılı!", 'success', true); saveHistory(inputValue, proxyUrl); 
+                elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.href = proxyUrl; elements.downloadBtn.onclick = (e) => { return window.forceDownload(e, elements.downloadBtn, proxyUrl, false); };
                 elements.profileImage.style.cursor = 'pointer'; elements.profileImage.onclick = () => openModal([{url: hdImageUrl, isVideo: false}]); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, proxyUrl);
-            } else { showToast("errNotFound"); }
-            return;
+            } else { showToast("errNotFound"); } return;
         }
 
         let items = []; if (currentMode === 'posts') { if (data && data.result && data.result.edges) { items = data.result.edges.map(edge => edge.node); } else if (data && data.data && data.data.user && data.data.user.edge_owner_to_timeline_media) { items = data.data.user.edge_owner_to_timeline_media.edges.map(e => e.node); } else if (data && data.edges) { items = data.edges.map(edge => edge.node); } else if (data && data.items) { items = data.items; } } else { items = Array.isArray(data) ? data : (data.result ? data.result : [data]); }
@@ -456,35 +388,14 @@ async function executeSearch(isLoadMore = false) {
         let hasMore = false;
         if(currentMode === 'posts' && data) {
             let foundMaxId = '';
-            if (data.next_max_id) foundMaxId = data.next_max_id;
-            else if (data.result && data.result.next_max_id) foundMaxId = data.result.next_max_id;
-            else if (data.result && data.result.paging_info && data.result.paging_info.max_id) foundMaxId = data.result.paging_info.max_id;
-            else if (data.data && data.data.user && data.data.user.edge_owner_to_timeline_media && data.data.user.edge_owner_to_timeline_media.page_info) foundMaxId = data.data.user.edge_owner_to_timeline_media.page_info.end_cursor;
-            else if (data.paging_info && data.paging_info.max_id) foundMaxId = data.paging_info.max_id;
-            else if (Array.isArray(data) && data.length > 0 && data[data.length - 1].id) foundMaxId = data[data.length - 1].id;
-
-            globalMaxId = foundMaxId;
-            hasMore = (globalMaxId && globalMaxId !== '') ? true : false;
-            
-            if (!hasMore && items && items.length >= 12) {
-                let lastItem = items[items.length - 1];
-                globalMaxId = lastItem.id || lastItem.pk;
-                hasMore = true;
-            }
+            if (data.next_max_id) foundMaxId = data.next_max_id; else if (data.result && data.result.next_max_id) foundMaxId = data.result.next_max_id; else if (data.result && data.result.paging_info && data.result.paging_info.max_id) foundMaxId = data.result.paging_info.max_id; else if (data.data && data.data.user && data.data.user.edge_owner_to_timeline_media && data.data.user.edge_owner_to_timeline_media.page_info) foundMaxId = data.data.user.edge_owner_to_timeline_media.page_info.end_cursor; else if (data.paging_info && data.paging_info.max_id) foundMaxId = data.paging_info.max_id; else if (Array.isArray(data) && data.length > 0 && data[data.length - 1].id) foundMaxId = data[data.length - 1].id;
+            globalMaxId = foundMaxId; hasMore = (globalMaxId && globalMaxId !== '') ? true : false;
+            if (!hasMore && items && items.length >= 12) { let lastItem = items[items.length - 1]; globalMaxId = lastItem.id || lastItem.pk; hasMore = true; }
         }
 
-        if (!items || items.length === 0 || !items[0]) { 
-            if(!isLoadMore) {
-                if (currentMode === 'story') showToast("errStory"); else if (currentMode === 'highlight') showToast("errHighlight"); else if (currentMode === 'video') showToast("errVideo"); else showToast("errNotFound"); 
-            } else {
-                elements.loadMoreBtn.style.display = 'none';
-            }
-            return; 
-        }
+        if (!items || items.length === 0 || !items[0]) { if(!isLoadMore) { if (currentMode === 'story') showToast("errStory"); else if (currentMode === 'highlight') showToast("errHighlight"); else if (currentMode === 'video') showToast("errVideo"); else showToast("errNotFound"); } else { elements.loadMoreBtn.style.display = 'none'; } return; }
 
-        elements.galleryContainer.style.display = 'grid'; 
-        if(!isLoadMore && !cachedData) showToast("Sonuçlar bulundu!", 'success', true);
-        
+        elements.galleryContainer.style.display = 'grid'; if(!isLoadMore && !cachedData) showToast("Sonuçlar bulundu!", 'success', true);
         let extractedPic = null; if (items && items.length > 0 && items[0].user && items[0].user.profile_pic_url) { extractedPic = `https://wsrv.nl/?url=${encodeURIComponent(items[0].user.profile_pic_url)}`; } saveHistory(inputValue, extractedPic);
 
         if (currentMode === 'highlight') {
@@ -499,32 +410,20 @@ async function executeSearch(isLoadMore = false) {
 
         if (currentMode === 'posts') {
             if(!isLoadMore) elements.galleryContainer.innerHTML = ''; 
-
             items.forEach((item, index) => {
                 let mediaArray = []; if (item.carousel_media && item.carousel_media.length > 0) { mediaArray = item.carousel_media; } else if (item.edge_sidecar_to_children && item.edge_sidecar_to_children.edges) { mediaArray = item.edge_sidecar_to_children.edges.map(e => e.node); } else { mediaArray = [item]; }
                 if(mediaArray.length === 0) return; let cleanMediaList = mediaArray.map(m => getMediaUrl(m)).filter(m => m.url); if(cleanMediaList.length === 0) cleanMediaList = [getMediaUrl(item)]; let coverMedia = cleanMediaList[0];
                 let captionText = item.caption && item.caption.text ? item.caption.text.substring(0, 80) + "..." : ""; if (!captionText && item.edge_media_to_caption && item.edge_media_to_caption.edges.length > 0) { captionText = item.edge_media_to_caption.edges[0].node.text.substring(0, 80) + "..."; }
                 let likes = item.like_count ? `<i class="fa-solid fa-heart" style="color:#ef4444;"></i> ${item.like_count}` : ""; if(!likes && item.edge_media_preview_like) likes = `<i class="fa-solid fa-heart" style="color:#ef4444;"></i> ${item.edge_media_preview_like.count}`;
                 let comments = item.comment_count ? `<i class="fa-solid fa-comment" style="color:#007acc;"></i> ${item.comment_count}` : ""; if(!comments && item.edge_media_to_comment) comments = `<i class="fa-solid fa-comment" style="color:#007acc;"></i> ${item.edge_media_to_comment.count}`;
-
                 let mediaHtml = coverMedia.isVideo ? `<video src="${coverMedia.url}" preload="metadata" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(coverMedia.url)}" loading="lazy" class="cinematic-media">`;
                 let badgeHtml = ''; if (cleanMediaList.length > 1) { badgeHtml = `<div class="carousel-badge"><i class="fa-solid fa-clone"></i></div>`; } else if (coverMedia.isVideo) { badgeHtml = `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>`; }
-
                 const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
                 div.innerHTML = `<div class="media-box">${badgeHtml} ${mediaHtml}</div><div class="info-box-bottom"><div style="display:flex; gap:15px; margin-bottom:8px; font-weight:bold;"><span>${likes}</span> <span>${comments}</span></div><p style="color:#8a8a8a; font-size:12px;">${captionText}</p></div><a href="${coverMedia.url}" onclick="return window.forceDownload(event, this, '${coverMedia.url}', ${coverMedia.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
-                
                 const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal(cleanMediaList)); mediaEl.oncontextmenu = (e) => showContextMenu(e, coverMedia.url); }
                 attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
             }); 
-            
-            if(hasMore) {
-                elements.loadMoreBtn.style.display = 'flex';
-                elements.loadMoreBtn.innerHTML = `<i class="fa-solid fa-arrow-rotate-right"></i> ${translations[currentLang].btnLoadMore}`;
-                elements.loadMoreBtn.style.pointerEvents = 'auto';
-            } else {
-                elements.loadMoreBtn.style.display = 'none';
-            }
-            return;
+            if(hasMore) { elements.loadMoreBtn.style.display = 'flex'; elements.loadMoreBtn.innerHTML = `<i class="fa-solid fa-arrow-rotate-right"></i> ${translations[currentLang].btnLoadMore}`; elements.loadMoreBtn.style.pointerEvents = 'auto'; } else { elements.loadMoreBtn.style.display = 'none'; } return;
         }
 
         if (items.length > 1 || currentMode === 'story') {
@@ -539,8 +438,7 @@ async function executeSearch(isLoadMore = false) {
             elements.galleryContainer.style.display = 'none'; const media = getMediaUrl(items[0]); if (!media.url) { showToast("errVideo"); return; }
             if (media.isVideo) { elements.resultVideo.src = media.url; elements.resultVideo.style.display = 'block'; attachCinematicLoad(elements.resultVideo); elements.resultVideo.oncontextmenu = (e) => showContextMenu(e, media.url); } 
             else { elements.profileImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.profileImage.style.display = 'block'; attachCinematicLoad(elements.profileImage); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
-            elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.href = media.url;
-            elements.downloadBtn.onclick = (e) => { return window.forceDownload(e, elements.downloadBtn, media.url, media.isVideo); };
+            elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.href = media.url; elements.downloadBtn.onclick = (e) => { return window.forceDownload(e, elements.downloadBtn, media.url, media.isVideo); };
         }
     } catch (err) {}
 }
@@ -572,27 +470,20 @@ document.querySelectorAll('.accordion-header').forEach(button => { button.addEve
 let currentMediaArray = []; let currentMediaIndex = 0;
 
 function openModal(mediaArray) {
-    triggerVibration();
-    document.querySelector('.lang-dropdown-container').style.display = 'none'; 
+    triggerVibration(); document.querySelector('.lang-dropdown-container').style.display = 'none'; 
     if(!mediaArray || mediaArray.length === 0) return; currentMediaArray = mediaArray; currentMediaIndex = 0;
     elements.mediaModal.style.display = 'block'; document.body.style.overflow = 'hidden'; updateModalContent();
 }
 function closeModal() { 
-    elements.mediaModal.style.display = 'none'; 
-    elements.modalVideo.pause(); 
-    elements.modalVideo.src = ""; 
-    document.body.style.overflow = 'auto'; 
-    document.querySelector('.lang-dropdown-container').style.display = 'block'; 
+    elements.mediaModal.style.display = 'none'; elements.modalVideo.pause(); elements.modalVideo.src = ""; 
+    document.body.style.overflow = 'auto'; document.querySelector('.lang-dropdown-container').style.display = 'block'; 
 }
 
 function updateModalContent() {
     const media = currentMediaArray[currentMediaIndex]; elements.modalImage.style.display = 'none'; elements.modalVideo.style.display = 'none'; elements.modalVideo.pause(); elements.modalVideo.src = "";
     if (media.isVideo) { elements.modalVideo.src = media.url; elements.modalVideo.style.display = 'block'; elements.modalVideo.load(); elements.modalVideo.oncontextmenu = (e) => showContextMenu(e, media.url); } 
     else { elements.modalImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.modalImage.style.display = 'block'; elements.modalImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
-    
-    elements.modalDownloadBtn.href = media.url;
-    elements.modalDownloadBtn.onclick = (e) => { return window.forceDownload(e, elements.modalDownloadBtn, media.url, media.isVideo); };
-    
+    elements.modalDownloadBtn.href = media.url; elements.modalDownloadBtn.onclick = (e) => { return window.forceDownload(e, elements.modalDownloadBtn, media.url, media.isVideo); };
     if (currentMediaArray.length > 1) { elements.modalPrev.style.display = currentMediaIndex > 0 ? 'flex' : 'none'; elements.modalNext.style.display = currentMediaIndex < currentMediaArray.length - 1 ? 'flex' : 'none'; elements.modalCounter.style.display = 'block'; elements.modalCounter.textContent = `${currentMediaIndex + 1} / ${currentMediaArray.length}`; } else { elements.modalPrev.style.display = 'none'; elements.modalNext.style.display = 'none'; elements.modalCounter.style.display = 'none'; }
 }
 function nextMedia() { if (currentMediaIndex < currentMediaArray.length - 1) { currentMediaIndex++; updateModalContent(); triggerVibration(); } }
@@ -606,4 +497,18 @@ document.addEventListener('keydown', e => { if (elements.mediaModal.style.displa
 async function autoDetect() { try { const res = await fetch('https://ipapi.co/json/'); const data = await res.json(); changeLanguage(data.country_code === 'TR' ? 'tr' : 'en'); } catch (e) { changeLanguage('tr'); } loadHistory(); }
 autoDetect();
 
-window.addEventListener('DOMContentLoaded', () => { VANTA.CLOUDS({ el: "#vanta-bg", mouseControls: true, touchControls: true, gyroControls: false, minHeight: 200.00, minWidth: 200.00, backgroundColor: 0x0, skyColor: 0x5ca6ca, cloudColor: 0x334d80, cloudShadowColor: 0x182030, sunColor: 0xffffff, sunGlareColor: 0xffffff, sunPosition: {x: 0, y: 0, z: 0}, speed: 1.50 }); });
+// YENİ EKLENEN KISIM: Yüklendiğinde butonların stilini ayarlayan ve ikonu seçen motor
+window.addEventListener('DOMContentLoaded', () => { 
+    // Sekmeleri Ayarla
+    elements.tabs.forEach(btn => btn.classList.remove('active'));
+    const activeTabElement = document.getElementById('tab' + currentMode.charAt(0).toUpperCase() + currentMode.slice(1));
+    if(activeTabElement) activeTabElement.classList.add('active');
+
+    // İkonu Ayarla
+    const iconMap = { 'profile': 'fa-user-circle', 'posts': 'fa-border-all', 'video': 'fa-play', 'story': 'fa-clock-rotate-left', 'highlight': 'fa-star' };
+    if(elements.inputIcon) elements.inputIcon.innerHTML = `<i class="fa-solid ${iconMap[currentMode]}"></i>`;
+    
+    updateModeText();
+
+    VANTA.CLOUDS({ el: "#vanta-bg", mouseControls: true, touchControls: true, gyroControls: false, minHeight: 200.00, minWidth: 200.00, backgroundColor: 0x0, skyColor: 0x5ca6ca, cloudColor: 0x334d80, cloudShadowColor: 0x182030, sunColor: 0xffffff, sunGlareColor: 0xffffff, sunPosition: {x: 0, y: 0, z: 0}, speed: 1.50 }); 
+});
