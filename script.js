@@ -79,3 +79,23 @@ window.addEventListener('DOMContentLoaded', () => {
         VANTA.CLOUDS({ el: "#vanta-bg", mouseControls: true, touchControls: true, gyroControls: false, minHeight: 200.00, minWidth: 200.00, backgroundColor: 0x0, skyColor: 0x5ca6ca, cloudColor: 0x334d80, cloudShadowColor: 0x182030, speed: 1.50 });
     }
 });
+
+window.addEventListener('DOMContentLoaded', () => {
+    // Butonları link gibi çalıştıran motor
+    const routeMap = {
+        'tabProfile': '/',
+        'tabPosts': '/gonderiler.html',
+        'tabVideo': '/reels-indir.html',
+        'tabStory': '/hikaye-izle.html',
+        'tabHighlight': '/one-cikanlar.html'
+    };
+
+    Object.keys(routeMap).forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.addEventListener('click', () => {
+                window.location.href = routeMap[id];
+            });
+        }
+    });
+});
