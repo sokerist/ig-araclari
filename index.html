@@ -17,9 +17,20 @@
     
     <div id="vanta-bg"></div>
 
-    <div class="lang-wrapper">
-        <div class="lang-btn" onclick="changeLanguage('tr')" title="Türkçe"><img src="https://flagcdn.com/tr.svg" alt="TR"></div>
-        <div class="lang-btn" onclick="changeLanguage('en')" title="English"><img src="https://flagcdn.com/gb.svg" alt="EN"></div>
+    <!-- YENİ: PREMIUM AÇILIR DİL MENÜSÜ -->
+    <div class="lang-dropdown-container">
+        <div class="lang-toggle" id="langToggle">
+            <img src="https://flagcdn.com/tr.svg" alt="Active Lang" id="activeLangIcon">
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="lang-menu" id="langMenu">
+            <div class="lang-option" onclick="changeLanguage('tr', 'https://flagcdn.com/tr.svg')" title="Türkçe"><img src="https://flagcdn.com/tr.svg" alt="TR"></div>
+            <div class="lang-option" onclick="changeLanguage('en', 'https://flagcdn.com/gb.svg')" title="English"><img src="https://flagcdn.com/gb.svg" alt="EN"></div>
+            <div class="lang-option" onclick="changeLanguage('de', 'https://flagcdn.com/de.svg')" title="Deutsch"><img src="https://flagcdn.com/de.svg" alt="DE"></div>
+            <div class="lang-option" onclick="changeLanguage('es', 'https://flagcdn.com/es.svg')" title="Español"><img src="https://flagcdn.com/es.svg" alt="ES"></div>
+            <div class="lang-option" onclick="changeLanguage('fr', 'https://flagcdn.com/fr.svg')" title="Français"><img src="https://flagcdn.com/fr.svg" alt="FR"></div>
+            <div class="lang-option" onclick="changeLanguage('ru', 'https://flagcdn.com/ru.svg')" title="Русский"><img src="https://flagcdn.com/ru.svg" alt="RU"></div>
+        </div>
     </div>
 
     <div class="page-wrapper">
@@ -33,7 +44,7 @@
             <p id="descText">Kullanıcı adını yaz ve tam boy HD profil fotoğrafını görüntüle.</p>
             
             <div class="tabs">
-                <button class="tab-btn active" id="tabProfile"><i class="fa-solid fa-user-circle"></i> <span class="tab-text">PROFİL</span></button>
+                <button class="tab-btn active" id="tabProfile"><i class="fa-solid fa-user-circle"></i> <span class="tab-text">PROFİL FOTOĞRAFI</span></button>
                 <button class="tab-btn" id="tabPosts"><i class="fa-solid fa-border-all"></i> <span class="tab-text">GÖNDERİLER</span></button>
                 <button class="tab-btn" id="tabVideo"><i class="fa-solid fa-play"></i> <span class="tab-text">REELS / VİDEO</span></button>
                 <button class="tab-btn" id="tabStory"><i class="fa-solid fa-clock-rotate-left"></i> <span class="tab-text">HİKAYE</span></button>
@@ -93,7 +104,6 @@
         <div class="custom-menu-item" id="menuDownload"><i class="fa-solid fa-download"></i> <span id="menuTextDl">İndir</span></div>
     </div>
 
-    <!-- MODAL BÖLÜMÜ GÜNCELLENDİ: BUTONLAR KUTUDAN ÇIKARTILDI -->
     <div id="mediaModal" class="modal">
         <span class="close-modal">&times;</span>
         <div class="modal-counter" id="modalCounter">1 / 1</div>
@@ -105,7 +115,6 @@
             <video id="modalVideo" controls autoplay style="display: none;"></video>
         </div>
         
-        <!-- Butonlar artık özgür ve en altta ortalı! -->
         <div class="modal-actions">
             <button id="modalCopyBtn" class="modal-action-btn"><i class="fa-solid fa-link"></i></button>
             <a id="modalDownloadBtn" href="" target="_blank" class="modal-action-btn dl-primary"><i class="fa-solid fa-download"></i> <span id="modalDlText">İndir</span></a>

@@ -46,6 +46,102 @@ const translations = {
         faq3Q: "Is this tool free?", faq3A: "Yes, you can use all tools on our site completely free, without passwords and ad-free, within daily limits.",
         footerText: "We are not affiliated with Instagram™. We do not host any Instagram content. All rights belong to their respective owners. We respect privacy — only public content is available.",
         btnModalDl: "Download", menuOpen: "Open Full Size", menuCopy: "Copy Link", menuDl: "Download Media", toastCopied: "Copied to clipboard!"
+    },
+    de: {
+        title: "Instagram Werkzeuge | Anonymer Betrachter", heading: "Instagram Werkzeuge",
+        descProfile: "Benutzername eingeben, um das HD-Profilbild herunterzuladen.",
+        descPosts: "Benutzername eingeben, um alle Beiträge anonym anzusehen.",
+        descVideo: "Instagram Reels oder Video-Link einfügen zum Herunterladen.",
+        descStory: "Benutzername eingeben, um aktive Stories anzusehen.",
+        descHighlight: "Benutzername eingeben, um Highlights aufzulisten.",
+        tabProfile: "PROFILBILD", tabPosts: "BEITRÄGE", tabVideo: "REELS / VIDEO", tabStory: "STORY", tabHighlight: "HIGHLIGHTS",
+        placeholderUser: "benutzername", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Holen", btnDownload: "Herunterladen",
+        errEmpty: "Bitte geben Sie einen Benutzernamen oder Link ein.",
+        errNotFound: "Keine Aufzeichnungen gefunden! Konto könnte privat sein.",
+        errStory: "Keine Stories gefunden. Konto könnte privat sein.",
+        errHighlight: "Keine Highlights gefunden.",
+        errVideo: "Video nicht gefunden. Bitte Link überprüfen.",
+        errSystem: "Ein Systemfehler ist aufgetreten.",
+        toastSearching: "Daten werden gesucht...",
+        faqHeading: "Häufig Gestellte Fragen",
+        faq1Q: "Wird der Benutzer wissen, dass ich sein Profil angesehen habe?", faq1A: "Nein, alles ist zu 100% anonym.",
+        faq2Q: "Kann ich private Profile ansehen?", faq2A: "Sie können nur HD-Profilbilder sehen.",
+        faq3Q: "Ist das kostenlos?", faq3A: "Ja, alle Werkzeuge sind völlig kostenlos.",
+        footerText: "Wir sind nicht mit Instagram™ verbunden. Alle Rechte liegen bei den Eigentümern.",
+        btnModalDl: "Herunterladen", menuOpen: "In voller Größe öffnen", menuCopy: "Link kopieren", menuDl: "Medien herunterladen", toastCopied: "Kopiert!"
+    },
+    es: {
+        title: "Herramientas Instagram | Visor Anónimo", heading: "Herramientas Instagram",
+        descProfile: "Ingresa el usuario para ver la foto de perfil en HD.",
+        descPosts: "Ingresa el usuario para ver publicaciones anónimamente.",
+        descVideo: "Pega el enlace del Reel/Video para descargar.",
+        descStory: "Ingresa el usuario para ver historias activas.",
+        descHighlight: "Ingresa el usuario para ver Highlights.",
+        tabProfile: "FOTO DE PERFIL", tabPosts: "PUBLICACIONES", tabVideo: "REELS / VIDEO", tabStory: "HISTORIA", tabHighlight: "DESTACADOS",
+        placeholderUser: "usuario", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Obtener", btnDownload: "Descargar",
+        errEmpty: "Por favor ingresa un usuario o enlace.",
+        errNotFound: "¡No se encontró! La cuenta puede ser privada.",
+        errStory: "No se encontraron historias.",
+        errHighlight: "No se encontraron destacados.",
+        errVideo: "Video no encontrado.",
+        errSystem: "Ocurrió un error del sistema.",
+        toastSearching: "Buscando datos...",
+        faqHeading: "Preguntas Frecuentes",
+        faq1Q: "¿Sabrá el usuario que vi su perfil?", faq1A: "No, todo es 100% anónimo.",
+        faq2Q: "¿Puedo ver perfiles privados?", faq2A: "Solo puedes ver fotos de perfil HD.",
+        faq3Q: "¿Es gratis?", faq3A: "Sí, todas las herramientas son gratuitas.",
+        footerText: "No estamos afiliados a Instagram™. Todos los derechos pertenecen a sus dueños.",
+        btnModalDl: "Descargar", menuOpen: "Abrir tamaño completo", menuCopy: "Copiar enlace", menuDl: "Descargar medios", toastCopied: "¡Copiado!"
+    },
+    fr: {
+        title: "Outils Instagram | Visionneuse Anonyme", heading: "Outils Instagram",
+        descProfile: "Entrez le nom d'utilisateur pour voir la photo de profil HD.",
+        descPosts: "Entrez le nom d'utilisateur pour voir les publications.",
+        descVideo: "Collez le lien Reels ou Vidéo pour télécharger.",
+        descStory: "Entrez le nom d'utilisateur pour voir les stories.",
+        descHighlight: "Entrez le nom d'utilisateur pour voir les Highlights.",
+        tabProfile: "PHOTO DE PROFIL", tabPosts: "PUBLICATIONS", tabVideo: "REELS / VIDÉO", tabStory: "STORY", tabHighlight: "HIGHLIGHTS",
+        placeholderUser: "nom d'utilisateur", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Obtenir", btnDownload: "Télécharger",
+        errEmpty: "Veuillez entrer un nom d'utilisateur ou un lien.",
+        errNotFound: "Introuvable ! Le compte est peut-être privé.",
+        errStory: "Aucune story trouvée.",
+        errHighlight: "Aucun highlight trouvé.",
+        errVideo: "Vidéo introuvable.",
+        errSystem: "Une erreur système s'est produite.",
+        toastSearching: "Recherche de données...",
+        faqHeading: "Questions Fréquentes",
+        faq1Q: "L'utilisateur saura-t-il que j'ai vu son profil ?", faq1A: "Non, tout est 100% anonyme.",
+        faq2Q: "Puis-je voir les profils privés ?", faq2A: "Vous ne pouvez voir que la photo de profil HD.",
+        faq3Q: "Est-ce gratuit ?", faq3A: "Oui, tous les outils sont gratuits.",
+        footerText: "Nous ne sommes pas affiliés à Instagram™. Tous les droits appartiennent à leurs propriétaires.",
+        btnModalDl: "Télécharger", menuOpen: "Ouvrir en taille réelle", menuCopy: "Copier le lien", menuDl: "Télécharger le média", toastCopied: "Copié !"
+    },
+    ru: {
+        title: "Инструменты Instagram | Анонимный просмотр", heading: "Инструменты Instagram",
+        descProfile: "Введите имя пользователя для загрузки фото профиля.",
+        descPosts: "Введите имя пользователя для просмотра постов.",
+        descVideo: "Вставьте ссылку на Reels или Видео для загрузки.",
+        descStory: "Введите имя пользователя для просмотра историй.",
+        descHighlight: "Введите имя пользователя для просмотра Highlights.",
+        tabProfile: "ФОТО ПРОФИЛЯ", tabPosts: "ПОСТЫ", tabVideo: "REELS / ВИДЕО", tabStory: "ИСТОРИЯ", tabHighlight: "АКТУАЛЬНОЕ",
+        placeholderUser: "имя пользователя", placeholderUrl: "https://www.instagram.com/reel/...",
+        btnGet: "Получить", btnDownload: "Скачать",
+        errEmpty: "Пожалуйста, введите имя пользователя или ссылку.",
+        errNotFound: "Не найдено! Аккаунт может быть приватным.",
+        errStory: "Истории не найдены.",
+        errHighlight: "Актуальное не найдено.",
+        errVideo: "Видео не найдено.",
+        errSystem: "Произошла системная ошибка.",
+        toastSearching: "Поиск данных...",
+        faqHeading: "Часто задаваемые вопросы",
+        faq1Q: "Узнает ли пользователь, что я смотрел его профиль?", faq1A: "Нет, всё 100% анонимно.",
+        faq2Q: "Могу ли я смотреть закрытые профили?", faq2A: "Вы можете смотреть только фото профиля в HD.",
+        faq3Q: "Это бесплатно?", faq3A: "Да, все инструменты бесплатны.",
+        footerText: "Мы не связаны с Instagram™. Все права принадлежат их владельцам.",
+        btnModalDl: "Скачать", menuOpen: "Открыть в полном размере", menuCopy: "Скопировать ссылку", menuDl: "Скачать медиа", toastCopied: "Скопировано!"
     }
 };
 
@@ -64,9 +160,29 @@ const elements = {
     modalCopyBtn: document.getElementById('modalCopyBtn'), modalDlText: document.getElementById('modalDlText'),
     contextMenu: document.getElementById('customContextMenu'), menuOpen: document.getElementById('menuOpen'),
     menuCopy: document.getElementById('menuCopy'), menuDownload: document.getElementById('menuDownload'),
-    downloadBtn: document.getElementById('downloadBtn'),
-    clearInputBtn: document.getElementById('clearInputBtn'),
-    scrollTopBtn: document.getElementById('scrollTopBtn')
+    downloadBtn: document.getElementById('downloadBtn'), clearInputBtn: document.getElementById('clearInputBtn'),
+    scrollTopBtn: document.getElementById('scrollTopBtn'),
+    langToggle: document.getElementById('langToggle'), langMenu: document.getElementById('langMenu'), activeLangIcon: document.getElementById('activeLangIcon')
+};
+
+// --- YENİ: AÇILIR DİL MENÜSÜ KONTROLLERİ ---
+elements.langToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    elements.langMenu.classList.toggle('open');
+    elements.langToggle.classList.toggle('open');
+});
+document.addEventListener('click', (e) => {
+    if(!elements.langToggle.contains(e.target) && !elements.langMenu.contains(e.target)) {
+        elements.langMenu.classList.remove('open');
+        elements.langToggle.classList.remove('open');
+    }
+});
+window.changeLanguage = function(lang, flagUrl) {
+    currentLang = lang;
+    if(flagUrl) elements.activeLangIcon.src = flagUrl;
+    elements.langMenu.classList.remove('open');
+    elements.langToggle.classList.remove('open');
+    updateUI();
 };
 
 function triggerVibration() { if (navigator.vibrate) navigator.vibrate(40); }
@@ -205,10 +321,6 @@ function cleanInput(val) {
     if(cleaned.includes('instagram.com/')) { try { let url = new URL(cleaned.startsWith('http') ? cleaned : 'https://' + cleaned); let pathParts = url.pathname.split('/').filter(p => p.length > 0); if(pathParts.length > 0 && pathParts[0] !== 'p' && pathParts[0] !== 'reel' && pathParts[0] !== 'tv') { cleaned = pathParts[0]; } } catch(e) {} }
     if(cleaned.startsWith('@')) cleaned = cleaned.substring(1); cleaned = cleaned.split('?')[0].split('/')[0]; return cleaned;
 }
-function changeLanguage(lang) {
-    currentLang = lang; updateUI(); document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active-lang'));
-    const activeBtn = document.querySelector(`.lang-btn[title="${lang === 'tr' ? 'Türkçe' : 'English'}"]`); if(activeBtn) activeBtn.classList.add('active-lang');
-}
 function updateUI() {
     const t = translations[currentLang]; document.title = t.title; document.getElementById('mainHeading').textContent = t.heading; document.getElementById('btnText').textContent = t.btnGet;
     document.getElementById('tabProfile').querySelector('.tab-text').textContent = t.tabProfile; document.getElementById('tabPosts').querySelector('.tab-text').textContent = t.tabPosts;
@@ -295,7 +407,15 @@ elements.searchBtn.addEventListener('click', async function() {
                 let albumId = album.id || album.highlightId; let title = album.title || "Albüm"; let rawCoverUrl = album.cover_media?.image_versions2?.candidates?.[0]?.url || album.cover_media?.cropped_image_version?.url || album.cover;
                 if(!albumId) return; let finalCoverUrl = rawCoverUrl ? `https://wsrv.nl/?url=${encodeURIComponent(forceHdUrl(rawCoverUrl))}` : 'https://via.placeholder.com/250x250/0e0e0e/007acc?text=Album';
                 const div = document.createElement('div'); div.className = 'gallery-item'; div.style.cursor = 'pointer'; div.style.animationDelay = `${index * 0.05}s`;
-                div.innerHTML = `<img src="${finalCoverUrl}" class="cinematic-media" style="height:250px; object-fit:cover;"> <div style="padding: 15px; text-align: center; background: rgba(0, 122, 204, 0.8); color: #fff; font-weight: bold; display:flex; align-items:center; justify-content:center; gap:8px;"><i class="fa-solid fa-folder-open"></i> ${title}</div>`;
+                
+                // YENİ: VİDEOLAR İÇİN KUTU İÇİ KUTU (SİYAH BAR VE YUTULMA ENGELLİ)
+                div.innerHTML = `
+                    <div class="media-box">
+                        <img src="${finalCoverUrl}" class="cinematic-media">
+                    </div> 
+                    <div class="info-box-bottom" style="text-align: center; justify-content:center; display:flex; align-items:center; background: rgba(0, 122, 204, 0.8); color: #fff; font-weight: bold;">
+                        <i class="fa-solid fa-folder-open" style="margin-right:8px;"></i> ${title}
+                    </div>`;
                 div.onclick = () => loadHighlightStories(albumId); const img = div.querySelector('img'); if(img) attachCinematicLoad(img); attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
             }); return;
         }
@@ -313,9 +433,12 @@ elements.searchBtn.addEventListener('click', async function() {
 
                 const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
                 
+                // YENİ: VİDEOLAR İÇİN KUTU İÇİ KUTU (SİYAH BAR VE YUTULMA ENGELLİ)
                 div.innerHTML = `
-                    ${badgeHtml} ${mediaHtml}
-                    <div style="padding: 12px; font-size: 14px; background: #0e0e0e; color: #ddd; text-align:left; pointer-events:none;">
+                    <div class="media-box">
+                        ${badgeHtml} ${mediaHtml}
+                    </div>
+                    <div class="info-box-bottom">
                         <div style="display:flex; gap:15px; margin-bottom:8px; font-weight:bold;"><span>${likes}</span> <span>${comments}</span></div>
                         <p style="color:#8a8a8a; font-size:12px;">${captionText}</p>
                     </div>
@@ -331,8 +454,11 @@ elements.searchBtn.addEventListener('click', async function() {
                 const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
                 let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
                 
+                // YENİ: VİDEOLAR İÇİN KUTU İÇİ KUTU (SİYAH BAR VE YUTULMA ENGELLİ)
                 div.innerHTML = `
-                    ${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
+                    <div class="media-box">
+                        ${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
+                    </div>
                     <a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
                 const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
                 attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
@@ -361,8 +487,11 @@ async function loadHighlightStories(highlightId) {
             const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
             let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
             
+            // YENİ: VİDEOLAR İÇİN KUTU İÇİ KUTU (SİYAH BAR VE YUTULMA ENGELLİ)
             div.innerHTML = `
-                ${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
+                <div class="media-box">
+                    ${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
+                </div>
                 <a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
             const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
             attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
@@ -376,8 +505,7 @@ let currentMediaArray = []; let currentMediaIndex = 0;
 
 function openModal(mediaArray) {
     triggerVibration();
-    document.querySelector('.lang-wrapper').style.display = 'none'; 
-    
+    document.querySelector('.lang-dropdown-container').style.display = 'none'; 
     if(!mediaArray || mediaArray.length === 0) return; currentMediaArray = mediaArray; currentMediaIndex = 0;
     elements.mediaModal.style.display = 'block'; document.body.style.overflow = 'hidden'; updateModalContent();
 }
@@ -386,7 +514,7 @@ function closeModal() {
     elements.modalVideo.pause(); 
     elements.modalVideo.src = ""; 
     document.body.style.overflow = 'auto'; 
-    document.querySelector('.lang-wrapper').style.display = 'flex'; 
+    document.querySelector('.lang-dropdown-container').style.display = 'block'; 
 }
 
 function updateModalContent() {
