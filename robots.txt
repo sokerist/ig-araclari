@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://igaraclari.com.tr/sitemap.xml
