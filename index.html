@@ -44,6 +44,7 @@
                 <div class="input-wrapper">
                     <span class="at-symbol" id="inputIcon"><i class="fa-solid fa-at"></i></span>
                     <input type="text" id="mainInput" placeholder="kullaniciadi" autocomplete="off" spellcheck="false">
+                    <i class="fa-solid fa-xmark clear-icon" id="clearInputBtn"></i>
                 </div>
                 <button id="searchBtn"><span id="btnText">Getir</span> <i class="fa-solid fa-arrow-right arrow"></i></button>
             </div>
@@ -53,6 +54,7 @@
             <div class="result-container" id="resultContainer">
                 <img id="profileImage" src="" alt="Sonuç" style="display: none;" class="cinematic-media">
                 <video id="resultVideo" controls style="display: none;" class="cinematic-media"></video>
+                <a id="downloadBtn" class="dl-btn-small" style="display: none; justify-content: center; align-items: center; gap: 8px; margin-bottom: 25px; width: 100%; max-width: 250px; border-radius: 12px; font-size: 16px;"><i class="fa-solid fa-download"></i> İndir</a>
                 <div id="galleryContainer" class="gallery" style="display: none;"></div>
             </div>
         </div>
@@ -81,6 +83,8 @@
 
     </div> 
     
+    <div id="scrollTopBtn" class="scroll-top-btn"><i class="fa-solid fa-chevron-up"></i></div>
+
     <div id="toastContainer" class="toast-container"></div>
 
     <div id="customContextMenu" class="custom-menu">
@@ -89,6 +93,7 @@
         <div class="custom-menu-item" id="menuDownload"><i class="fa-solid fa-download"></i> <span id="menuTextDl">İndir</span></div>
     </div>
 
+    <!-- MODAL BÖLÜMÜ GÜNCELLENDİ: BUTONLAR KUTUDAN ÇIKARTILDI -->
     <div id="mediaModal" class="modal">
         <span class="close-modal">&times;</span>
         <div class="modal-counter" id="modalCounter">1 / 1</div>
@@ -98,11 +103,12 @@
         <div class="modal-content">
             <img id="modalImage" src="" alt="Büyütülmüş Görsel" style="display: none;">
             <video id="modalVideo" controls autoplay style="display: none;"></video>
-            
-            <div class="modal-actions">
-                <button id="modalCopyBtn" class="modal-action-btn"><i class="fa-solid fa-link"></i></button>
-                <a id="modalDownloadBtn" href="" target="_blank" class="modal-action-btn dl-primary"><i class="fa-solid fa-download"></i> <span id="modalDlText">İndir</span></a>
-            </div>
+        </div>
+        
+        <!-- Butonlar artık özgür ve en altta ortalı! -->
+        <div class="modal-actions">
+            <button id="modalCopyBtn" class="modal-action-btn"><i class="fa-solid fa-link"></i></button>
+            <a id="modalDownloadBtn" href="" target="_blank" class="modal-action-btn dl-primary"><i class="fa-solid fa-download"></i> <span id="modalDlText">İndir</span></a>
         </div>
     </div>
 

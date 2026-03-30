@@ -5,8 +5,8 @@ const translations = {
         descPosts: "Kullanıcı adını yaz ve tüm gönderilerini (fotoğraf/video) anonim olarak incele.",
         descVideo: "Instagram Reels veya Video linkini yapıştır ve indir.",
         descStory: "Kullanıcı adını yaz ve aktif olan tüm hikayeleri görüntüle.",
-        descHighlight: "Kullanıcı adını yaz ve tüm öne çıkan (Highlight) albümlerini listele.",
-        tabProfile: "PROFİL", tabPosts: "GÖNDERİLER", tabVideo: "REELS / VİDEO", tabStory: "HİKAYE", tabHighlight: "ÖNE ÇIKANLAR",
+        descHighlight: "Kullanıcı adını yaz ve tüm Öne Çıkanlar (Highlights) albümlerini listele.",
+        tabProfile: "PROFİL FOTOĞRAFI", tabPosts: "GÖNDERİLER", tabVideo: "REELS / VİDEO", tabStory: "HİKAYE", tabHighlight: "ÖNE ÇIKANLAR",
         placeholderUser: "kullaniciadi", placeholderUrl: "https://www.instagram.com/reel/...",
         btnGet: "Getir", btnDownload: "İndir",
         errEmpty: "Lütfen aramak için bir kullanıcı adı veya link girin.",
@@ -29,8 +29,8 @@ const translations = {
         descPosts: "Enter username to anonymously view all posts (photos/videos).",
         descVideo: "Paste Instagram Reels or Video link to download.",
         descStory: "Enter username to view all active stories.",
-        descHighlight: "Enter username to list all featured (Highlight) albums.",
-        tabProfile: "PROFILE", tabPosts: "POSTS", tabVideo: "REELS / VIDEO", tabStory: "STORY", tabHighlight: "HIGHLIGHTS",
+        descHighlight: "Enter username to list all Highlights albums.",
+        tabProfile: "PROFILE PICTURE", tabPosts: "POSTS", tabVideo: "REELS / VIDEO", tabStory: "STORY", tabHighlight: "HIGHLIGHTS",
         placeholderUser: "username", placeholderUrl: "https://www.instagram.com/reel/...",
         btnGet: "Get", btnDownload: "Download",
         errEmpty: "Please enter a username or link to search.",
@@ -64,70 +64,97 @@ const elements = {
     modalCopyBtn: document.getElementById('modalCopyBtn'), modalDlText: document.getElementById('modalDlText'),
     contextMenu: document.getElementById('customContextMenu'), menuOpen: document.getElementById('menuOpen'),
     menuCopy: document.getElementById('menuCopy'), menuDownload: document.getElementById('menuDownload'),
-    downloadBtn: document.getElementById('downloadBtn')
+    downloadBtn: document.getElementById('downloadBtn'),
+    clearInputBtn: document.getElementById('clearInputBtn'),
+    scrollTopBtn: document.getElementById('scrollTopBtn')
 };
 
-// --- NATIVE APPLE POPUP İÇİN İKİ AŞAMALI İNDİRME MOTORU (BLOB MAGIC) ---
+function triggerVibration() { if (navigator.vibrate) navigator.vibrate(40); }
+
+elements.mainInput.addEventListener('input', function() {
+    if(this.value.length > 0) elements.clearInputBtn.style.display = 'block';
+    else elements.clearInputBtn.style.display = 'none';
+});
+elements.clearInputBtn.addEventListener('click', () => { elements.mainInput.value = ''; elements.clearInputBtn.style.display = 'none'; elements.mainInput.focus(); });
+window.addEventListener('scroll', () => { if (window.scrollY > 300) elements.scrollTopBtn.classList.add('visible'); else elements.scrollTopBtn.classList.remove('visible'); });
+elements.scrollTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
 window.forceDownload = async function(event, btn, url, isVideo) {
     if(event) event.preventDefault();
+    triggerVibration(); 
 
-    // 1. Aşama: Eğer Blob zaten oluşturulduysa, Native Safari İndirme Menüsünü Tetikle!
-    if (btn.hasAttribute('data-blob')) {
-        const blobUrl = btn.getAttribute('data-blob');
+    const inAppBrowser = /FBAN|FBAV|Instagram|WhatsApp|Line|Snapchat/i.test(navigator.userAgent);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    if (inAppBrowser) {
+        showToast('⚠️ WhatsApp/IG tarayıcısında indirme yapılamaz. Sağ alt/üstten "Safari/Chrome\'da Aç" deyin.', 'error');
+        return false;
+    }
+
+    if (!isIOS) {
         const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = blobUrl;
-        a.download = `ig_medya_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
+        a.href = url + (url.includes('?') ? '&dl=1' : '?dl=1');
+        a.target = '_blank';
+        a.download = `instagram_medya_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
         document.body.appendChild(a);
-        a.click(); // İşte Safari'deki o native "İndir/Görüntüle" menüsünü açacak sihirli vuruş!
+        a.click();
         document.body.removeChild(a);
         return false;
     }
 
-    // 2. Aşama: İlk Tıklamada videoyu arka planda çek (Loader Ekranı)
-    const inAppBrowser = /FBAN|FBAV|Instagram|WhatsApp|Line|Snapchat/i.test(navigator.userAgent);
-    if (inAppBrowser) {
-        showToast('WhatsApp/IG tarayıcısında indirme sorunları yaşanabilir. Sağ alt/üstten "Safari\'de Aç" demeniz önerilir.', 'info');
-    }
-
     const originalText = btn.innerHTML;
-    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Hazırlanıyor...`;
-    btn.style.backgroundColor = "#f59e0b"; // Turuncu
-    btn.style.pointerEvents = "none"; // Çift tıklamayı engelle
+    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> İndiriliyor...`;
+    btn.style.backgroundColor = "#f59e0b"; 
+    btn.style.pointerEvents = "none";
 
     try {
         const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-        const response = await fetch(proxyUrl);
-        if (!response.ok) throw new Error('CORS');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+        const response = await fetch(proxyUrl, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) throw new Error('CORS Hatası');
         
-        const blob = await response.blob();
+        const arrayBuffer = await response.arrayBuffer();
+        const blob = new Blob([arrayBuffer], { type: 'application/octet-stream' });
         const blobUrl = window.URL.createObjectURL(blob);
         
-        // 3. Aşama: Butonu Yeşil yap ve İkinci Tıklamaya Hazırla
-        btn.innerHTML = `<i class="fa-solid fa-download"></i> Tıkla ve İndir`;
-        btn.style.backgroundColor = "#10b981"; // Yeşil
-        btn.style.pointerEvents = "auto";
-        btn.setAttribute('data-blob', blobUrl);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = blobUrl;
+        a.download = `ig_medya_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
         
-        showToast('Dosya hazır! Menüyü açmak için butona tekrar basın.', 'success');
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(blobUrl);
+        document.body.removeChild(a);
+
+        btn.innerHTML = `<i class="fa-solid fa-check"></i> Başarılı!`;
+        btn.style.backgroundColor = "#10b981"; 
+        setTimeout(() => { btn.innerHTML = originalText; btn.style.backgroundColor = ""; btn.style.pointerEvents = "auto"; }, 3000);
+
     } catch (error) {
-        // Dosya çok büyükse tünel tıkanır, eski yönteme (Yeni Sekmeye) düşer
-        btn.innerHTML = originalText;
-        btn.style.backgroundColor = "";
-        btn.style.pointerEvents = "auto";
+        btn.innerHTML = originalText; btn.style.backgroundColor = ""; btn.style.pointerEvents = "auto";
+        showToast('Lütfen açılan sekmede Paylaş > Dosyalara Kaydet yapın.', 'info');
         window.open(url, '_blank');
     }
     return false;
 };
 
 elements.searchBtn.addEventListener('mousemove', (e) => {
+    if(window.innerWidth < 768) return; 
     const rect = elements.searchBtn.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2; const y = e.clientY - rect.top - rect.height / 2;
     elements.searchBtn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`; elements.searchBtn.style.transition = 'none';
 });
-elements.searchBtn.addEventListener('mouseleave', () => { elements.searchBtn.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)'; elements.searchBtn.style.transform = 'translate(0px, 0px)'; });
+elements.searchBtn.addEventListener('mouseleave', () => { 
+    if(window.innerWidth < 768) return;
+    elements.searchBtn.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)'; elements.searchBtn.style.transform = 'translate(0px, 0px)'; 
+});
 
 function attachSpotlightEffect(div) {
+    if(window.innerWidth < 768) return; 
     div.addEventListener('mousemove', (e) => {
         const rect = div.getBoundingClientRect(); const x = e.clientX - rect.left; const y = e.clientY - rect.top;
         div.style.setProperty('--mouse-x', `${x}px`); div.style.setProperty('--mouse-y', `${y}px`);
@@ -208,9 +235,10 @@ function showSkeleton() {
 }
 function hideSkeleton() { elements.galleryContainer.innerHTML = ''; }
 function switchTab(mode, iconClass, btnId) {
+    triggerVibration(); 
     currentMode = mode; elements.tabs.forEach(btn => btn.classList.remove('active')); document.getElementById(btnId).classList.add('active');
     elements.inputIcon.innerHTML = `<i class="fa-solid ${iconClass}"></i>`; elements.galleryContainer.style.display = 'none'; elements.galleryContainer.innerHTML = '';
-    elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none'; elements.downloadBtn.style.display = 'none'; elements.mainInput.value = ''; updateModeText(); loadHistory(); 
+    elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none'; elements.downloadBtn.style.display = 'none'; elements.mainInput.value = ''; elements.clearInputBtn.style.display = 'none'; updateModeText(); loadHistory(); 
 }
 
 document.getElementById('tabProfile').addEventListener('click', () => switchTab('profile', 'fa-user-circle', 'tabProfile'));
@@ -227,6 +255,7 @@ function getMediaUrl(item) {
 function forceHdUrl(url) { if(!url) return url; return url.replace(/\/s\d+x\d+\//g, '/').replace(/\/c\d+\.\d+\.\d+\.\d+[a-zA-Z]*\//g, '/'); }
 
 elements.searchBtn.addEventListener('click', async function() {
+    triggerVibration(); 
     let rawInputValue = elements.mainInput.value; if (rawInputValue.trim() === '') { showToast('errEmpty'); return; }
     const inputValue = cleanInput(rawInputValue); elements.mainInput.value = inputValue; showToast('toastSearching', 'info'); showSkeleton();
     let apiUrl = ''; let payload = {};
@@ -248,7 +277,7 @@ elements.searchBtn.addEventListener('click', async function() {
                 showToast(translations[currentLang].btnGet + " başarılı!", 'success', true); saveHistory(inputValue, proxyUrl); 
                 
                 elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.href = proxyUrl; 
-                elements.downloadBtn.onclick = (e) => { return forceDownload(e, elements.downloadBtn, proxyUrl, false); };
+                elements.downloadBtn.onclick = (e) => { return window.forceDownload(e, elements.downloadBtn, proxyUrl, false); };
                 
                 elements.profileImage.style.cursor = 'pointer'; elements.profileImage.onclick = () => openModal([{url: hdImageUrl, isVideo: false}]); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, proxyUrl);
             } else { showToast("errNotFound"); }
@@ -314,7 +343,7 @@ elements.searchBtn.addEventListener('click', async function() {
             else { elements.profileImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.profileImage.style.display = 'block'; attachCinematicLoad(elements.profileImage); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
             
             elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.href = media.url;
-            elements.downloadBtn.onclick = (e) => { return forceDownload(e, elements.downloadBtn, media.url, media.isVideo); };
+            elements.downloadBtn.onclick = (e) => { return window.forceDownload(e, elements.downloadBtn, media.url, media.isVideo); };
         }
     } catch (error) { clearTimeout(timeoutId); hideSkeleton(); showToast("errSystem"); }
 });
@@ -344,23 +373,34 @@ async function loadHighlightStories(highlightId) {
 document.querySelectorAll('.accordion-header').forEach(button => { button.addEventListener('click', () => { const content = button.nextElementSibling; button.classList.toggle('active'); if (button.classList.contains('active')) { content.style.maxHeight = content.scrollHeight + 'px'; } else { content.style.maxHeight = 0; } }); });
 
 let currentMediaArray = []; let currentMediaIndex = 0;
+
 function openModal(mediaArray) {
+    triggerVibration();
+    document.querySelector('.lang-wrapper').style.display = 'none'; 
+    
     if(!mediaArray || mediaArray.length === 0) return; currentMediaArray = mediaArray; currentMediaIndex = 0;
     elements.mediaModal.style.display = 'block'; document.body.style.overflow = 'hidden'; updateModalContent();
 }
+function closeModal() { 
+    elements.mediaModal.style.display = 'none'; 
+    elements.modalVideo.pause(); 
+    elements.modalVideo.src = ""; 
+    document.body.style.overflow = 'auto'; 
+    document.querySelector('.lang-wrapper').style.display = 'flex'; 
+}
+
 function updateModalContent() {
     const media = currentMediaArray[currentMediaIndex]; elements.modalImage.style.display = 'none'; elements.modalVideo.style.display = 'none'; elements.modalVideo.pause(); elements.modalVideo.src = "";
     if (media.isVideo) { elements.modalVideo.src = media.url; elements.modalVideo.style.display = 'block'; elements.modalVideo.load(); elements.modalVideo.oncontextmenu = (e) => showContextMenu(e, media.url); } 
     else { elements.modalImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.modalImage.style.display = 'block'; elements.modalImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
     
     elements.modalDownloadBtn.href = media.url;
-    elements.modalDownloadBtn.onclick = (e) => { return forceDownload(e, elements.modalDownloadBtn, media.url, media.isVideo); };
+    elements.modalDownloadBtn.onclick = (e) => { return window.forceDownload(e, elements.modalDownloadBtn, media.url, media.isVideo); };
     
     if (currentMediaArray.length > 1) { elements.modalPrev.style.display = currentMediaIndex > 0 ? 'flex' : 'none'; elements.modalNext.style.display = currentMediaIndex < currentMediaArray.length - 1 ? 'flex' : 'none'; elements.modalCounter.style.display = 'block'; elements.modalCounter.textContent = `${currentMediaIndex + 1} / ${currentMediaArray.length}`; } else { elements.modalPrev.style.display = 'none'; elements.modalNext.style.display = 'none'; elements.modalCounter.style.display = 'none'; }
 }
-function nextMedia() { if (currentMediaIndex < currentMediaArray.length - 1) { currentMediaIndex++; updateModalContent(); } }
-function prevMedia() { if (currentMediaIndex > 0) { currentMediaIndex--; updateModalContent(); } }
-function closeModal() { elements.mediaModal.style.display = 'none'; elements.modalVideo.pause(); elements.modalVideo.src = ""; document.body.style.overflow = 'auto'; }
+function nextMedia() { if (currentMediaIndex < currentMediaArray.length - 1) { currentMediaIndex++; updateModalContent(); triggerVibration(); } }
+function prevMedia() { if (currentMediaIndex > 0) { currentMediaIndex--; updateModalContent(); triggerVibration(); } }
 
 elements.modalNext.addEventListener('click', nextMedia); elements.modalPrev.addEventListener('click', prevMedia);
 if (elements.closeModalBtn) elements.closeModalBtn.addEventListener('click', closeModal);
