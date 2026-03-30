@@ -165,7 +165,6 @@ const elements = {
     langToggle: document.getElementById('langToggle'), langMenu: document.getElementById('langMenu'), activeLangIcon: document.getElementById('activeLangIcon')
 };
 
-// --- YENİ: AÇILIR DİL MENÜSÜ KONTROLLERİ ---
 elements.langToggle.addEventListener('click', (e) => {
     e.stopPropagation();
     elements.langMenu.classList.toggle('open');
@@ -321,6 +320,10 @@ function cleanInput(val) {
     if(cleaned.includes('instagram.com/')) { try { let url = new URL(cleaned.startsWith('http') ? cleaned : 'https://' + cleaned); let pathParts = url.pathname.split('/').filter(p => p.length > 0); if(pathParts.length > 0 && pathParts[0] !== 'p' && pathParts[0] !== 'reel' && pathParts[0] !== 'tv') { cleaned = pathParts[0]; } } catch(e) {} }
     if(cleaned.startsWith('@')) cleaned = cleaned.substring(1); cleaned = cleaned.split('?')[0].split('/')[0]; return cleaned;
 }
+function changeLanguage(lang) {
+    currentLang = lang; updateUI(); document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active-lang'));
+    const activeBtn = document.querySelector(`.lang-btn[title="${lang === 'tr' ? 'Türkçe' : 'English'}"]`); if(activeBtn) activeBtn.classList.add('active-lang');
+}
 function updateUI() {
     const t = translations[currentLang]; document.title = t.title; document.getElementById('mainHeading').textContent = t.heading; document.getElementById('btnText').textContent = t.btnGet;
     document.getElementById('tabProfile').querySelector('.tab-text').textContent = t.tabProfile; document.getElementById('tabPosts').querySelector('.tab-text').textContent = t.tabPosts;
@@ -407,15 +410,7 @@ elements.searchBtn.addEventListener('click', async function() {
                 let albumId = album.id || album.highlightId; let title = album.title || "Albüm"; let rawCoverUrl = album.cover_media?.image_versions2?.candidates?.[0]?.url || album.cover_media?.cropped_image_version?.url || album.cover;
                 if(!albumId) return; let finalCoverUrl = rawCoverUrl ? `https://wsrv.nl/?url=${encodeURIComponent(forceHdUrl(rawCoverUrl))}` : 'https://via.placeholder.com/250x250/0e0e0e/007acc?text=Album';
                 const div = document.createElement('div'); div.className = 'gallery-item'; div.style.cursor = 'pointer'; div.style.animationDelay = `${index * 0.05}s`;
-                
-                // YENİ: VİDEOLAR İÇİN KUTU İÇİ KUTU (SİYAH BAR VE YUTULMA ENGELLİ)
-                div.innerHTML = `
-                    <div class="media-box">
-                        <img src="${finalCoverUrl}" class="cinematic-media">
-                    </div> 
-                    <div class="info-box-bottom" style="text-align: center; justify-content:center; display:flex; align-items:center; background: rgba(0, 122, 204, 0.8); color: #fff; font-weight: bold;">
-                        <i class="fa-solid fa-folder-open" style="margin-right:8px;"></i> ${title}
-                    </div>`;
+                div.innerHTML = `<div class="media-box"><img src="${finalCoverUrl}" class="cinematic-media"></div> <div class="info-box-bottom" style="text-align: center; justify-content:center; display:flex; align-items:center; background: rgba(0, 122, 204, 0.8); color: #fff; font-weight: bold;"><i class="fa-solid fa-folder-open" style="margin-right:8px;"></i> ${title}</div>`;
                 div.onclick = () => loadHighlightStories(albumId); const img = div.querySelector('img'); if(img) attachCinematicLoad(img); attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
             }); return;
         }
@@ -432,17 +427,7 @@ elements.searchBtn.addEventListener('click', async function() {
                 let badgeHtml = ''; if (cleanMediaList.length > 1) { badgeHtml = `<div class="carousel-badge"><i class="fa-solid fa-clone"></i></div>`; } else if (coverMedia.isVideo) { badgeHtml = `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>`; }
 
                 const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
-                
-                // YENİ: VİDEOLAR İÇİN KUTU İÇİ KUTU (SİYAH BAR VE YUTULMA ENGELLİ)
-                div.innerHTML = `
-                    <div class="media-box">
-                        ${badgeHtml} ${mediaHtml}
-                    </div>
-                    <div class="info-box-bottom">
-                        <div style="display:flex; gap:15px; margin-bottom:8px; font-weight:bold;"><span>${likes}</span> <span>${comments}</span></div>
-                        <p style="color:#8a8a8a; font-size:12px;">${captionText}</p>
-                    </div>
-                    <a href="${coverMedia.url}" onclick="return window.forceDownload(event, this, '${coverMedia.url}', ${coverMedia.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
+                div.innerHTML = `<div class="media-box">${badgeHtml} ${mediaHtml}</div><div class="info-box-bottom"><div style="display:flex; gap:15px; margin-bottom:8px; font-weight:bold;"><span>${likes}</span> <span>${comments}</span></div><p style="color:#8a8a8a; font-size:12px;">${captionText}</p></div><a href="${coverMedia.url}" onclick="return window.forceDownload(event, this, '${coverMedia.url}', ${coverMedia.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
                 
                 const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal(cleanMediaList)); mediaEl.oncontextmenu = (e) => showContextMenu(e, coverMedia.url); }
                 attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
@@ -453,13 +438,7 @@ elements.searchBtn.addEventListener('click', async function() {
             items.forEach((item, index) => {
                 const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
                 let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
-                
-                // YENİ: VİDEOLAR İÇİN KUTU İÇİ KUTU (SİYAH BAR VE YUTULMA ENGELLİ)
-                div.innerHTML = `
-                    <div class="media-box">
-                        ${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
-                    </div>
-                    <a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
+                div.innerHTML = `<div class="media-box">${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}</div><a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
                 const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
                 attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
             });
@@ -486,13 +465,7 @@ async function loadHighlightStories(highlightId) {
         items.forEach((item, index) => {
             const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
             let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
-            
-            // YENİ: VİDEOLAR İÇİN KUTU İÇİ KUTU (SİYAH BAR VE YUTULMA ENGELLİ)
-            div.innerHTML = `
-                <div class="media-box">
-                    ${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}
-                </div>
-                <a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
+            div.innerHTML = `<div class="media-box">${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}</div><a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
             const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
             attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
         });
