@@ -8,7 +8,7 @@ const translations = {
         descHighlight: "Kullanıcı adını yaz ve tüm Öne Çıkanlar (Highlights) albümlerini listele.",
         tabProfile: "PROFİL FOTOĞRAFI", tabPosts: "GÖNDERİLER", tabVideo: "REELS / VİDEO", tabStory: "HİKAYE", tabHighlight: "ÖNE ÇIKANLAR",
         placeholderUser: "kullaniciadi", placeholderUrl: "https://www.instagram.com/reel/...",
-        btnGet: "Getir", btnDownload: "İndir",
+        btnGet: "Getir", btnDownload: "İndir", btnLoadMore: "Daha Fazla Yükle",
         errEmpty: "Lütfen aramak için bir kullanıcı adı veya link girin.",
         errNotFound: "Kayıt bulunamadı! Lütfen bilgileri kontrol edin (Hesap gizli olabilir).",
         errStory: "Hikaye bulunamadı. Kullanıcı paylaşım yapmamış veya hesap gizli.",
@@ -21,7 +21,9 @@ const translations = {
         faq2Q: "Gizli profilleri görebilir miyim?", faq2A: "Gizli profillerin sadece HD profil fotoğraflarını görüntüleyebilirsiniz. Gönderi veya hikayeler için hesapların herkese açık olması gerekmektedir.",
         faq3Q: "Bu araç ücretsiz mi?", faq3A: "Evet, sitemizdeki tüm araçları günlük limitler dahilinde tamamen ücretsiz, şifresiz ve reklamsız olarak kullanabilirsiniz.",
         footerText: "Instagram™ ile herhangi bir bağlantımız yoktur. Sunucularımızda Instagram içeriği barındırılmamaktadır. Tüm hakları kendi sahiplerine aittir. Gizliliğe saygı duyuyoruz — yalnızca herkese açık içerikler görüntülenebilir.",
-        btnModalDl: "İndir", menuOpen: "Tam Boyutta Aç", menuCopy: "Bağlantıyı Kopyala", menuDl: "Medyayı İndir", toastCopied: "Panoya kopyalandı!"
+        btnModalDl: "İndir", menuOpen: "Tam Boyutta Aç", menuCopy: "Bağlantıyı Kopyala", menuDl: "Medyayı İndir", toastCopied: "Panoya kopyalandı!",
+        iosDlToast: "🕵️ Lütfen açılan pencerede 'Görseli Kaydet' veya 'Dosyalara Kaydet' seçeneğine basın.",
+        inAppBrowserWarn: "⚠️ Bu tarayıcı indirmeyi kısıtlıyor. Lütfen sağ üstten Safari veya Chrome'da açın."
     },
     en: {
         title: "Instagram Tools | Anonymous Viewer", heading: "Instagram Tools",
@@ -32,7 +34,7 @@ const translations = {
         descHighlight: "Enter username to list all Highlights albums.",
         tabProfile: "PROFILE PICTURE", tabPosts: "POSTS", tabVideo: "REELS / VIDEO", tabStory: "STORY", tabHighlight: "HIGHLIGHTS",
         placeholderUser: "username", placeholderUrl: "https://www.instagram.com/reel/...",
-        btnGet: "Get", btnDownload: "Download",
+        btnGet: "Get", btnDownload: "Download", btnLoadMore: "Load More",
         errEmpty: "Please enter a username or link to search.",
         errNotFound: "No records found! Please check the info (Account might be private).",
         errStory: "No stories found. User may not have posted or account is private.",
@@ -45,107 +47,15 @@ const translations = {
         faq2Q: "Can I view private profiles?", faq2A: "You can only view HD profile pictures of private accounts. For posts and stories, the account must be public.",
         faq3Q: "Is this tool free?", faq3A: "Yes, you can use all tools on our site completely free, without passwords and ad-free, within daily limits.",
         footerText: "We are not affiliated with Instagram™. We do not host any Instagram content. All rights belong to their respective owners. We respect privacy — only public content is available.",
-        btnModalDl: "Download", menuOpen: "Open Full Size", menuCopy: "Copy Link", menuDl: "Download Media", toastCopied: "Copied to clipboard!"
-    },
-    de: {
-        title: "Instagram Werkzeuge | Anonymer Betrachter", heading: "Instagram Werkzeuge",
-        descProfile: "Benutzername eingeben, um das HD-Profilbild herunterzuladen.",
-        descPosts: "Benutzername eingeben, um alle Beiträge anonym anzusehen.",
-        descVideo: "Instagram Reels oder Video-Link einfügen zum Herunterladen.",
-        descStory: "Benutzername eingeben, um aktive Stories anzusehen.",
-        descHighlight: "Benutzername eingeben, um Highlights aufzulisten.",
-        tabProfile: "PROFILBILD", tabPosts: "BEITRÄGE", tabVideo: "REELS / VIDEO", tabStory: "STORY", tabHighlight: "HIGHLIGHTS",
-        placeholderUser: "benutzername", placeholderUrl: "https://www.instagram.com/reel/...",
-        btnGet: "Holen", btnDownload: "Herunterladen",
-        errEmpty: "Bitte geben Sie einen Benutzernamen oder Link ein.",
-        errNotFound: "Keine Aufzeichnungen gefunden! Konto könnte privat sein.",
-        errStory: "Keine Stories gefunden. Konto könnte privat sein.",
-        errHighlight: "Keine Highlights gefunden.",
-        errVideo: "Video nicht gefunden. Bitte Link überprüfen.",
-        errSystem: "Ein Systemfehler ist aufgetreten.",
-        toastSearching: "Daten werden gesucht...",
-        faqHeading: "Häufig Gestellte Fragen",
-        faq1Q: "Wird der Benutzer wissen, dass ich sein Profil angesehen habe?", faq1A: "Nein, alles ist zu 100% anonym.",
-        faq2Q: "Kann ich private Profile ansehen?", faq2A: "Sie können nur HD-Profilbilder sehen.",
-        faq3Q: "Ist das kostenlos?", faq3A: "Ja, alle Werkzeuge sind völlig kostenlos.",
-        footerText: "Wir sind nicht mit Instagram™ verbunden. Alle Rechte liegen bei den Eigentümern.",
-        btnModalDl: "Herunterladen", menuOpen: "In voller Größe öffnen", menuCopy: "Link kopieren", menuDl: "Medien herunterladen", toastCopied: "Kopiert!"
-    },
-    es: {
-        title: "Herramientas Instagram | Visor Anónimo", heading: "Herramientas Instagram",
-        descProfile: "Ingresa el usuario para ver la foto de perfil en HD.",
-        descPosts: "Ingresa el usuario para ver publicaciones anónimamente.",
-        descVideo: "Pega el enlace del Reel/Video para descargar.",
-        descStory: "Ingresa el usuario para ver historias activas.",
-        descHighlight: "Ingresa el usuario para ver Highlights.",
-        tabProfile: "FOTO DE PERFIL", tabPosts: "PUBLICACIONES", tabVideo: "REELS / VIDEO", tabStory: "HISTORIA", tabHighlight: "DESTACADOS",
-        placeholderUser: "usuario", placeholderUrl: "https://www.instagram.com/reel/...",
-        btnGet: "Obtener", btnDownload: "Descargar",
-        errEmpty: "Por favor ingresa un usuario o enlace.",
-        errNotFound: "¡No se encontró! La cuenta puede ser privada.",
-        errStory: "No se encontraron historias.",
-        errHighlight: "No se encontraron destacados.",
-        errVideo: "Video no encontrado.",
-        errSystem: "Ocurrió un error del sistema.",
-        toastSearching: "Buscando datos...",
-        faqHeading: "Preguntas Frecuentes",
-        faq1Q: "¿Sabrá el usuario que vi su perfil?", faq1A: "No, todo es 100% anónimo.",
-        faq2Q: "¿Puedo ver perfiles privados?", faq2A: "Solo puedes ver fotos de perfil HD.",
-        faq3Q: "¿Es gratis?", faq3A: "Sí, todas las herramientas son gratuitas.",
-        footerText: "No estamos afiliados a Instagram™. Todos los derechos pertenecen a sus dueños.",
-        btnModalDl: "Descargar", menuOpen: "Abrir tamaño completo", menuCopy: "Copiar enlace", menuDl: "Descargar medios", toastCopied: "¡Copiado!"
-    },
-    fr: {
-        title: "Outils Instagram | Visionneuse Anonyme", heading: "Outils Instagram",
-        descProfile: "Entrez le nom d'utilisateur pour voir la photo de profil HD.",
-        descPosts: "Entrez le nom d'utilisateur pour voir les publications.",
-        descVideo: "Collez le lien Reels ou Vidéo pour télécharger.",
-        descStory: "Entrez le nom d'utilisateur pour voir les stories.",
-        descHighlight: "Entrez le nom d'utilisateur pour voir les Highlights.",
-        tabProfile: "PHOTO DE PROFIL", tabPosts: "PUBLICATIONS", tabVideo: "REELS / VIDÉO", tabStory: "STORY", tabHighlight: "HIGHLIGHTS",
-        placeholderUser: "nom d'utilisateur", placeholderUrl: "https://www.instagram.com/reel/...",
-        btnGet: "Obtenir", btnDownload: "Télécharger",
-        errEmpty: "Veuillez entrer un nom d'utilisateur ou un lien.",
-        errNotFound: "Introuvable ! Le compte est peut-être privé.",
-        errStory: "Aucune story trouvée.",
-        errHighlight: "Aucun highlight trouvé.",
-        errVideo: "Vidéo introuvable.",
-        errSystem: "Une erreur système s'est produite.",
-        toastSearching: "Recherche de données...",
-        faqHeading: "Questions Fréquentes",
-        faq1Q: "L'utilisateur saura-t-il que j'ai vu son profil ?", faq1A: "Non, tout est 100% anonyme.",
-        faq2Q: "Puis-je voir les profils privés ?", faq2A: "Vous ne pouvez voir que la photo de profil HD.",
-        faq3Q: "Est-ce gratuit ?", faq3A: "Oui, tous les outils sont gratuits.",
-        footerText: "Nous ne sommes pas affiliés à Instagram™. Tous les droits appartiennent à leurs propriétaires.",
-        btnModalDl: "Télécharger", menuOpen: "Ouvrir en taille réelle", menuCopy: "Copier le lien", menuDl: "Télécharger le média", toastCopied: "Copié !"
-    },
-    ru: {
-        title: "Инструменты Instagram | Анонимный просмотр", heading: "Инструменты Instagram",
-        descProfile: "Введите имя пользователя для загрузки фото профиля.",
-        descPosts: "Введите имя пользователя для просмотра постов.",
-        descVideo: "Вставьте ссылку на Reels или Видео для загрузки.",
-        descStory: "Введите имя пользователя для просмотра историй.",
-        descHighlight: "Введите имя пользователя для просмотра Highlights.",
-        tabProfile: "ФОТО ПРОФИЛЯ", tabPosts: "ПОСТЫ", tabVideo: "REELS / ВИДЕО", tabStory: "ИСТОРИЯ", tabHighlight: "АКТУАЛЬНОЕ",
-        placeholderUser: "имя пользователя", placeholderUrl: "https://www.instagram.com/reel/...",
-        btnGet: "Получить", btnDownload: "Скачать",
-        errEmpty: "Пожалуйста, введите имя пользователя или ссылку.",
-        errNotFound: "Не найдено! Аккаунт может быть приватным.",
-        errStory: "Истории не найдены.",
-        errHighlight: "Актуальное не найдено.",
-        errVideo: "Видео не найдено.",
-        errSystem: "Произошла системная ошибка.",
-        toastSearching: "Поиск данных...",
-        faqHeading: "Часто задаваемые вопросы",
-        faq1Q: "Узнает ли пользователь, что я смотрел его профиль?", faq1A: "Нет, всё 100% анонимно.",
-        faq2Q: "Могу ли я смотреть закрытые профили?", faq2A: "Вы можете смотреть только фото профиля в HD.",
-        faq3Q: "Это бесплатно?", faq3A: "Да, все инструменты бесплатны.",
-        footerText: "Мы не связаны с Instagram™. Все права принадлежат их владельцам.",
-        btnModalDl: "Скачать", menuOpen: "Открыть в полном размере", menuCopy: "Скопировать ссылку", menuDl: "Скачать медиа", toastCopied: "Скопировано!"
+        btnModalDl: "Download", menuOpen: "Open Full Size", menuCopy: "Copy Link", menuDl: "Download Media", toastCopied: "Copied to clipboard!",
+        iosDlToast: "🕵️ Please select 'Save Image' or 'Save to Files' in the popup window.",
+        inAppBrowserWarn: "⚠️ This browser restricts downloads. Please open in Safari or Chrome from the menu."
     }
 };
 
 let currentLang = 'tr'; let currentMode = 'profile'; let contextMediaUrl = '';
+let globalMaxId = ''; 
+let lastSearchedUser = ''; 
 
 const elements = {
     tabs: document.querySelectorAll('.tab-btn'), mainInput: document.getElementById('mainInput'),
@@ -162,7 +72,8 @@ const elements = {
     menuCopy: document.getElementById('menuCopy'), menuDownload: document.getElementById('menuDownload'),
     downloadBtn: document.getElementById('downloadBtn'), clearInputBtn: document.getElementById('clearInputBtn'),
     scrollTopBtn: document.getElementById('scrollTopBtn'),
-    langToggle: document.getElementById('langToggle'), langMenu: document.getElementById('langMenu'), activeLangIcon: document.getElementById('activeLangIcon')
+    langToggle: document.getElementById('langToggle'), langMenu: document.getElementById('langMenu'), activeLangIcon: document.getElementById('activeLangIcon'),
+    loadMoreBtn: document.getElementById('loadMoreBtn') 
 };
 
 elements.langToggle.addEventListener('click', (e) => {
@@ -194,18 +105,27 @@ elements.clearInputBtn.addEventListener('click', () => { elements.mainInput.valu
 window.addEventListener('scroll', () => { if (window.scrollY > 300) elements.scrollTopBtn.classList.add('visible'); else elements.scrollTopBtn.classList.remove('visible'); });
 elements.scrollTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
+// ==================================================
+// 🕵️‍♂️ ULTRA GELİŞMİŞ VE iOS UYUMLU İNDİRME MOTORU
+// ==================================================
 window.forceDownload = async function(event, btn, url, isVideo) {
     if(event) event.preventDefault();
     triggerVibration(); 
 
-    const inAppBrowser = /FBAN|FBAV|Instagram|WhatsApp|Line|Snapchat/i.test(navigator.userAgent);
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    // 1. ADIM: Tarayıcı Tespiti
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    const inAppBrowser = /FBAN|FBAV|Instagram|WhatsApp|Line|Snapchat/i.test(userAgent);
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
+    // 2. ADIM: In-App Tarayıcı Uyarısı (IG/WA içindeyse)
     if (inAppBrowser) {
-        showToast('⚠️ WhatsApp/IG tarayıcısında indirme yapılamaz. Sağ alt/üstten "Safari/Chrome\'da Aç" deyin.', 'error');
-        return false;
+        showToast('inAppBrowserWarn', 'error');
+        // iOS ise o 'Paylaş' penceresini açmasına izin verelim, çünkü başka çaresi yok.
+        // Ama Android ise veya video ise indirmeyi blocklayıp yönlendirelim.
+        if(!isIOS || isVideo) return false; 
     }
 
+    // 3. ADIM: Android/Masaüstü için blob indirme (Yağ gibi akar)
     if (!isIOS) {
         const a = document.createElement('a');
         a.href = url + (url.includes('?') ? '&dl=1' : '?dl=1');
@@ -217,6 +137,13 @@ window.forceDownload = async function(event, btn, url, isVideo) {
         return false;
     }
 
+    // 4. ADIM: iOS/iPhone için Yönlendirme ve Mesajlaşma (Sıradaki adım)
+    // iOS blobları 'Kaydet' diyemediği için share sheet açar. Kullanıcıyı hazırlayalım.
+    showToast('iosDlToast', 'info');
+    
+    // Eğer share sheet açmıyorsa (bazı iOS sürümlerinde), o zaman linki yeni sekmede açalım.
+    // Ama önce bir proxy ile blob oluşturup share sheet'e sunmaya çalışalım.
+    
     const originalText = btn.innerHTML;
     btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> İndiriliyor...`;
     btn.style.backgroundColor = "#f59e0b"; 
@@ -241,9 +168,12 @@ window.forceDownload = async function(event, btn, url, isVideo) {
         a.download = `ig_medya_${Date.now()}.${isVideo ? 'mp4' : 'jpg'}`;
         
         document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(blobUrl);
-        document.body.removeChild(a);
+        a.click(); // iOS burada share sheet açacak!
+        
+        setTimeout(() => {
+             window.URL.revokeObjectURL(blobUrl);
+             document.body.removeChild(a);
+        }, 100);
 
         btn.innerHTML = `<i class="fa-solid fa-check"></i> Başarılı!`;
         btn.style.backgroundColor = "#10b981"; 
@@ -251,7 +181,7 @@ window.forceDownload = async function(event, btn, url, isVideo) {
 
     } catch (error) {
         btn.innerHTML = originalText; btn.style.backgroundColor = ""; btn.style.pointerEvents = "auto";
-        showToast('Lütfen açılan sekmede Paylaş > Dosyalara Kaydet yapın.', 'info');
+        // Blob başarısızsa veya share sheet açmadıysa linki direkt aç.
         window.open(url, '_blank');
     }
     return false;
@@ -325,6 +255,7 @@ function changeLanguage(lang) {
     const activeBtn = document.querySelector(`.lang-btn[title="${lang === 'tr' ? 'Türkçe' : 'English'}"]`); if(activeBtn) activeBtn.classList.add('active-lang');
 }
 function updateUI() {
+    if(!translations[currentLang]) currentLang = 'en';
     const t = translations[currentLang]; document.title = t.title; document.getElementById('mainHeading').textContent = t.heading; document.getElementById('btnText').textContent = t.btnGet;
     document.getElementById('tabProfile').querySelector('.tab-text').textContent = t.tabProfile; document.getElementById('tabPosts').querySelector('.tab-text').textContent = t.tabPosts;
     document.getElementById('tabVideo').querySelector('.tab-text').textContent = t.tabVideo; document.getElementById('tabStory').querySelector('.tab-text').textContent = t.tabStory;
@@ -332,7 +263,9 @@ function updateUI() {
     document.getElementById('faqHeading').textContent = t.faqHeading; document.getElementById('faq1Q').textContent = t.faq1Q; document.getElementById('faq1A').textContent = t.faq1A;
     document.getElementById('faq2Q').textContent = t.faq2Q; document.getElementById('faq2A').textContent = t.faq2A; document.getElementById('faq3Q').textContent = t.faq3Q; document.getElementById('faq3A').textContent = t.faq3A;
     document.getElementById('footerText').textContent = t.footerText; document.getElementById('menuTextOpen').textContent = t.menuOpen; document.getElementById('menuTextCopy').textContent = t.menuCopy;
-    document.getElementById('menuTextDl').textContent = t.menuDl; elements.modalDlText.textContent = t.btnModalDl; updateModeText();
+    document.getElementById('menuTextDl').textContent = t.menuDl; elements.modalDlText.textContent = t.btnModalDl; 
+    if(elements.loadMoreBtn.style.display !== 'none') elements.loadMoreBtn.innerHTML = `<i class="fa-solid fa-arrow-rotate-right"></i> ${t.btnLoadMore}`;
+    updateModeText();
 }
 function updateModeText() {
     const t = translations[currentLang]; const modeMap = { 'profile': { desc: t.descProfile, place: t.placeholderUser }, 'posts': { desc: t.descPosts, place: t.placeholderUser }, 'video': { desc: t.descVideo, place: t.placeholderUrl }, 'story': { desc: t.descStory, place: t.placeholderUser }, 'highlight': { desc: t.descHighlight, place: t.placeholderUser } };
@@ -353,7 +286,9 @@ function switchTab(mode, iconClass, btnId) {
     triggerVibration(); 
     currentMode = mode; elements.tabs.forEach(btn => btn.classList.remove('active')); document.getElementById(btnId).classList.add('active');
     elements.inputIcon.innerHTML = `<i class="fa-solid ${iconClass}"></i>`; elements.galleryContainer.style.display = 'none'; elements.galleryContainer.innerHTML = '';
-    elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none'; elements.downloadBtn.style.display = 'none'; elements.mainInput.value = ''; elements.clearInputBtn.style.display = 'none'; updateModeText(); loadHistory(); 
+    elements.profileImage.style.display = 'none'; elements.resultVideo.style.display = 'none'; elements.downloadBtn.style.display = 'none'; elements.mainInput.value = ''; elements.clearInputBtn.style.display = 'none'; 
+    globalMaxId = ''; lastSearchedUser = ''; elements.loadMoreBtn.style.display = 'none'; 
+    updateModeText(); loadHistory(); 
 }
 
 document.getElementById('tabProfile').addEventListener('click', () => switchTab('profile', 'fa-user-circle', 'tabProfile'));
@@ -369,40 +304,100 @@ function getMediaUrl(item) {
 }
 function forceHdUrl(url) { if(!url) return url; return url.replace(/\/s\d+x\d+\//g, '/').replace(/\/c\d+\.\d+\.\d+\.\d+[a-zA-Z]*\//g, '/'); }
 
-elements.searchBtn.addEventListener('click', async function() {
+
+async function executeSearch(isLoadMore = false) {
     triggerVibration(); 
-    let rawInputValue = elements.mainInput.value; if (rawInputValue.trim() === '') { showToast('errEmpty'); return; }
-    const inputValue = cleanInput(rawInputValue); elements.mainInput.value = inputValue; showToast('toastSearching', 'info'); showSkeleton();
+    
+    let rawInputValue = isLoadMore ? lastSearchedUser : elements.mainInput.value;
+    if (!isLoadMore && rawInputValue.trim() === '') { showToast('errEmpty'); return; }
+    
+    const inputValue = isLoadMore ? rawInputValue : cleanInput(rawInputValue);
+    
+    if(!isLoadMore) {
+        elements.mainInput.value = inputValue; 
+        lastSearchedUser = inputValue;
+        globalMaxId = ''; 
+        elements.loadMoreBtn.style.display = 'none';
+    } else {
+        elements.loadMoreBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Bekleyin...`;
+        elements.loadMoreBtn.style.pointerEvents = 'none';
+    }
+
     let apiUrl = ''; let payload = {};
     if (currentMode === 'profile') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/userInfo'; payload = { username: inputValue }; } 
-    else if (currentMode === 'posts') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/posts'; payload = { username: inputValue, maxId: '' }; } 
+    else if (currentMode === 'posts') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/posts'; payload = { username: inputValue, maxId: globalMaxId, end_cursor: globalMaxId }; } 
     else if (currentMode === 'video') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/links'; payload = { url: inputValue }; } 
     else if (currentMode === 'story') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/stories'; payload = { username: inputValue }; }
     else if (currentMode === 'highlight') { apiUrl = 'https://instagram120.p.rapidapi.com/api/instagram/highlights'; payload = { username: inputValue }; }
 
-    const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 15000);
-    const options = { method: 'POST', headers: { 'x-rapidapi-key': 'e85b603960msh904e3ba53ac93dbp1c3ff8jsn852b00b91449', 'x-rapidapi-host': 'instagram120.p.rapidapi.com', 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: controller.signal };
+    const cacheKey = `ig_cache_${currentMode}_${inputValue}_${globalMaxId}`;
+    const cachedData = sessionStorage.getItem(cacheKey);
+    let data;
+
+    if (cachedData) {
+        data = JSON.parse(cachedData);
+        if(!isLoadMore) { showSkeleton(); setTimeout(() => hideSkeleton(), 300); } 
+    } else {
+        if(!isLoadMore) { showToast('toastSearching', 'info'); showSkeleton(); }
+        const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const options = { method: 'POST', headers: { 'x-rapidapi-key': 'e85b603960msh904e3ba53ac93dbp1c3ff8jsn852b00b91449', 'x-rapidapi-host': 'instagram120.p.rapidapi.com', 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: controller.signal };
+
+        try {
+            const response = await fetch(apiUrl, options); clearTimeout(timeoutId); 
+            if(!isLoadMore) hideSkeleton(); 
+            data = await response.json(); 
+            if(data && !data.message) { sessionStorage.setItem(cacheKey, JSON.stringify(data)); }
+        } catch (error) { controller.abort(); }
+    }
 
     try {
-        const response = await fetch(apiUrl, options); clearTimeout(timeoutId); hideSkeleton(); let data = await response.json(); 
         if (currentMode === 'profile') {
             let hdImageUrl = null; if (data && data.result && data.result.length > 0 && data.result[0].user) { const userObj = data.result[0].user; hdImageUrl = userObj.hd_profile_pic_url_info?.url || userObj.profile_pic_url_hd || userObj.profile_pic_url; }
             if (hdImageUrl) {
                 const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(hdImageUrl)}`; elements.profileImage.src = proxyUrl; elements.profileImage.style.display = 'block'; attachCinematicLoad(elements.profileImage);
-                showToast(translations[currentLang].btnGet + " başarılı!", 'success', true); saveHistory(inputValue, proxyUrl); 
-                
+                if(!cachedData) showToast(translations[currentLang].btnGet + " başarılı!", 'success', true); 
+                saveHistory(inputValue, proxyUrl); 
                 elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.href = proxyUrl; 
                 elements.downloadBtn.onclick = (e) => { return window.forceDownload(e, elements.downloadBtn, proxyUrl, false); };
-                
                 elements.profileImage.style.cursor = 'pointer'; elements.profileImage.onclick = () => openModal([{url: hdImageUrl, isVideo: false}]); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, proxyUrl);
             } else { showToast("errNotFound"); }
             return;
         }
 
-        let items = []; if (currentMode === 'posts') { if (data && data.result && data.result.edges) { items = data.result.edges.map(edge => edge.node); } else if (data && data.edges) { items = data.edges.map(edge => edge.node); } } else { items = Array.isArray(data) ? data : (data.result ? data.result : [data]); }
-        if (!items || items.length === 0 || !items[0]) { if (currentMode === 'story') showToast("errStory"); else if (currentMode === 'highlight') showToast("errHighlight"); else if (currentMode === 'video') showToast("errVideo"); else showToast("errNotFound"); return; }
+        let items = []; if (currentMode === 'posts') { if (data && data.result && data.result.edges) { items = data.result.edges.map(edge => edge.node); } else if (data && data.data && data.data.user && data.data.user.edge_owner_to_timeline_media) { items = data.data.user.edge_owner_to_timeline_media.edges.map(e => e.node); } else if (data && data.edges) { items = data.edges.map(edge => edge.node); } else if (data && data.items) { items = data.items; } } else { items = Array.isArray(data) ? data : (data.result ? data.result : [data]); }
 
-        elements.galleryContainer.style.display = 'grid'; showToast("Sonuçlar bulundu!", 'success', true);
+        let hasMore = false;
+        if(currentMode === 'posts' && data) {
+            let foundMaxId = '';
+            if (data.next_max_id) foundMaxId = data.next_max_id;
+            else if (data.result && data.result.next_max_id) foundMaxId = data.result.next_max_id;
+            else if (data.result && data.result.paging_info && data.result.paging_info.max_id) foundMaxId = data.result.paging_info.max_id;
+            else if (data.data && data.data.user && data.data.user.edge_owner_to_timeline_media && data.data.user.edge_owner_to_timeline_media.page_info) foundMaxId = data.data.user.edge_owner_to_timeline_media.page_info.end_cursor;
+            else if (data.paging_info && data.paging_info.max_id) foundMaxId = data.paging_info.max_id;
+            else if (Array.isArray(data) && data.length > 0 && data[data.length - 1].id) foundMaxId = data[data.length - 1].id;
+
+            globalMaxId = foundMaxId;
+            hasMore = (globalMaxId && globalMaxId !== '') ? true : false;
+            
+            if (!hasMore && items && items.length >= 12) {
+                let lastItem = items[items.length - 1];
+                globalMaxId = lastItem.id || lastItem.pk;
+                hasMore = true;
+            }
+        }
+
+        if (!items || items.length === 0 || !items[0]) { 
+            if(!isLoadMore) {
+                if (currentMode === 'story') showToast("errStory"); else if (currentMode === 'highlight') showToast("errHighlight"); else if (currentMode === 'video') showToast("errVideo"); else showToast("errNotFound"); 
+            } else {
+                elements.loadMoreBtn.style.display = 'none';
+            }
+            return; 
+        }
+
+        elements.galleryContainer.style.display = 'grid'; 
+        if(!isLoadMore && !cachedData) showToast("Sonuçlar bulundu!", 'success', true);
+        
         let extractedPic = null; if (items && items.length > 0 && items[0].user && items[0].user.profile_pic_url) { extractedPic = `https://wsrv.nl/?url=${encodeURIComponent(items[0].user.profile_pic_url)}`; } saveHistory(inputValue, extractedPic);
 
         if (currentMode === 'highlight') {
@@ -410,12 +405,14 @@ elements.searchBtn.addEventListener('click', async function() {
                 let albumId = album.id || album.highlightId; let title = album.title || "Albüm"; let rawCoverUrl = album.cover_media?.image_versions2?.candidates?.[0]?.url || album.cover_media?.cropped_image_version?.url || album.cover;
                 if(!albumId) return; let finalCoverUrl = rawCoverUrl ? `https://wsrv.nl/?url=${encodeURIComponent(forceHdUrl(rawCoverUrl))}` : 'https://via.placeholder.com/250x250/0e0e0e/007acc?text=Album';
                 const div = document.createElement('div'); div.className = 'gallery-item'; div.style.cursor = 'pointer'; div.style.animationDelay = `${index * 0.05}s`;
-                div.innerHTML = `<div class="media-box"><img src="${finalCoverUrl}" class="cinematic-media"></div> <div class="info-box-bottom" style="text-align: center; justify-content:center; display:flex; align-items:center; background: rgba(0, 122, 204, 0.8); color: #fff; font-weight: bold;"><i class="fa-solid fa-folder-open" style="margin-right:8px;"></i> ${title}</div>`;
+                div.innerHTML = `<div class="media-box"><img src="${finalCoverUrl}" loading="lazy" class="cinematic-media"></div> <div class="info-box-bottom" style="text-align: center; justify-content:center; display:flex; align-items:center; background: rgba(0, 122, 204, 0.8); color: #fff; font-weight: bold;"><i class="fa-solid fa-folder-open" style="margin-right:8px;"></i> ${title}</div>`;
                 div.onclick = () => loadHighlightStories(albumId); const img = div.querySelector('img'); if(img) attachCinematicLoad(img); attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
             }); return;
         }
 
         if (currentMode === 'posts') {
+            if(!isLoadMore) elements.galleryContainer.innerHTML = ''; 
+
             items.forEach((item, index) => {
                 let mediaArray = []; if (item.carousel_media && item.carousel_media.length > 0) { mediaArray = item.carousel_media; } else if (item.edge_sidecar_to_children && item.edge_sidecar_to_children.edges) { mediaArray = item.edge_sidecar_to_children.edges.map(e => e.node); } else { mediaArray = [item]; }
                 if(mediaArray.length === 0) return; let cleanMediaList = mediaArray.map(m => getMediaUrl(m)).filter(m => m.url); if(cleanMediaList.length === 0) cleanMediaList = [getMediaUrl(item)]; let coverMedia = cleanMediaList[0];
@@ -423,7 +420,7 @@ elements.searchBtn.addEventListener('click', async function() {
                 let likes = item.like_count ? `<i class="fa-solid fa-heart" style="color:#ef4444;"></i> ${item.like_count}` : ""; if(!likes && item.edge_media_preview_like) likes = `<i class="fa-solid fa-heart" style="color:#ef4444;"></i> ${item.edge_media_preview_like.count}`;
                 let comments = item.comment_count ? `<i class="fa-solid fa-comment" style="color:#007acc;"></i> ${item.comment_count}` : ""; if(!comments && item.edge_media_to_comment) comments = `<i class="fa-solid fa-comment" style="color:#007acc;"></i> ${item.edge_media_to_comment.count}`;
 
-                let mediaHtml = coverMedia.isVideo ? `<video src="${coverMedia.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(coverMedia.url)}" class="cinematic-media">`;
+                let mediaHtml = coverMedia.isVideo ? `<video src="${coverMedia.url}" preload="metadata" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(coverMedia.url)}" loading="lazy" class="cinematic-media">`;
                 let badgeHtml = ''; if (cleanMediaList.length > 1) { badgeHtml = `<div class="carousel-badge"><i class="fa-solid fa-clone"></i></div>`; } else if (coverMedia.isVideo) { badgeHtml = `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>`; }
 
                 const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
@@ -431,14 +428,23 @@ elements.searchBtn.addEventListener('click', async function() {
                 
                 const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal(cleanMediaList)); mediaEl.oncontextmenu = (e) => showContextMenu(e, coverMedia.url); }
                 attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
-            }); return;
+            }); 
+            
+            if(hasMore) {
+                elements.loadMoreBtn.style.display = 'flex';
+                elements.loadMoreBtn.innerHTML = `<i class="fa-solid fa-arrow-rotate-right"></i> ${translations[currentLang].btnLoadMore}`;
+                elements.loadMoreBtn.style.pointerEvents = 'auto';
+            } else {
+                elements.loadMoreBtn.style.display = 'none';
+            }
+            return;
         }
 
         if (items.length > 1 || currentMode === 'story') {
             items.forEach((item, index) => {
                 const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
                 let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
-                div.innerHTML = `<div class="media-box">${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}</div><a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
+                div.innerHTML = `<div class="media-box">${badgeHtml} ${media.isVideo ? `<video src="${media.url}" preload="metadata" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" loading="lazy" class="cinematic-media">`}</div><a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> ${translations[currentLang].btnDownload}</a>`;
                 const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
                 attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
             });
@@ -446,12 +452,14 @@ elements.searchBtn.addEventListener('click', async function() {
             elements.galleryContainer.style.display = 'none'; const media = getMediaUrl(items[0]); if (!media.url) { showToast("errVideo"); return; }
             if (media.isVideo) { elements.resultVideo.src = media.url; elements.resultVideo.style.display = 'block'; attachCinematicLoad(elements.resultVideo); elements.resultVideo.oncontextmenu = (e) => showContextMenu(e, media.url); } 
             else { elements.profileImage.src = `https://wsrv.nl/?url=${encodeURIComponent(media.url)}`; elements.profileImage.style.display = 'block'; attachCinematicLoad(elements.profileImage); elements.profileImage.oncontextmenu = (e) => showContextMenu(e, media.url); }
-            
             elements.downloadBtn.style.display = 'flex'; elements.downloadBtn.href = media.url;
             elements.downloadBtn.onclick = (e) => { return window.forceDownload(e, elements.downloadBtn, media.url, media.isVideo); };
         }
-    } catch (error) { clearTimeout(timeoutId); hideSkeleton(); showToast("errSystem"); }
-});
+    } catch (err) {}
+}
+
+elements.searchBtn.addEventListener('click', () => executeSearch(false));
+elements.loadMoreBtn.addEventListener('click', () => executeSearch(true));
 
 async function loadHighlightStories(highlightId) {
     showToast('toastSearching', 'info'); showSkeleton();
@@ -465,11 +473,11 @@ async function loadHighlightStories(highlightId) {
         items.forEach((item, index) => {
             const media = getMediaUrl(item); if(!media.url) return; const div = document.createElement('div'); div.className = 'gallery-item'; div.style.animationDelay = `${index * 0.05}s`; 
             let badgeHtml = media.isVideo ? `<div class="carousel-badge"><i class="fa-solid fa-video"></i></div>` : '';
-            div.innerHTML = `<div class="media-box">${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" class="cinematic-media">`}</div><a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
+            div.innerHTML = `<div class="media-box">${badgeHtml} ${media.isVideo ? `<video src="${media.url}" autoplay muted loop playsinline class="cinematic-media"></video>` : `<img src="https://wsrv.nl/?url=${encodeURIComponent(media.url)}" loading="lazy" class="cinematic-media">`}</div><a href="${media.url}" onclick="return window.forceDownload(event, this, '${media.url}', ${media.isVideo})" class="dl-btn-small"><i class="fa-solid fa-download"></i> İndir</a>`;
             const mediaEl = div.querySelector('img, video'); if(mediaEl) { attachCinematicLoad(mediaEl); mediaEl.addEventListener('click', () => openModal([media])); mediaEl.oncontextmenu = (e) => showContextMenu(e, media.url); }
             attachSpotlightEffect(div); elements.galleryContainer.appendChild(div);
         });
-    } catch (error) { clearTimeout(timeoutId); hideSkeleton(); showToast("errSystem"); }
+    } catch (error) { controller.abort(); }
 }
 
 document.querySelectorAll('.accordion-header').forEach(button => { button.addEventListener('click', () => { const content = button.nextElementSibling; button.classList.toggle('active'); if (button.classList.contains('active')) { content.style.maxHeight = content.scrollHeight + 'px'; } else { content.style.maxHeight = 0; } }); });
